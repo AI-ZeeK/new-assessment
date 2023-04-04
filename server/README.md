@@ -41,11 +41,13 @@ On error, a response with the appropriate error message will be returned.
   - Content-Type: **`application/json`**
   - Authorization: **`Bearer [JWT_TOKEN] (required)`**
 - Body:
-  | Field | Type | Required | Description |
-  | ----- | ------ | ----------------------------------- |
-  | title | string |Yes | Title of the post |
-  | content | string | Yes | Content of the post |
-  | authorId | string | Yes | Unique identifier of the author |
+
+  | Field    | Type   | Required | Description                     |
+  | -------- | ------ | -------- | ------------------------------- |
+  | title    | string | Yes      | Title of the post               |
+  | content  | string | Yes      | Content of the post             |
+  | authorId | string | Yes      | Unique identifier of the author |
+
 - Response:
   On success, a response with a `**201**` Created status code will be returned, along with a JSON object containing the details of the created post.
 
@@ -96,10 +98,12 @@ On error, a response with the appropriate error message will be returned.
   - Content-Type: application/json
   - Authorization: Bearer [JWT_TOKEN] (required)
 - Body:
-  | Field | Type | Required | Description |
-  | ----- | ------ | ----------------------------------- |
-  | postId | string| Yes | Unique identifier of the post |
-  | comment| string| Yes | Content of the comment |
+
+  | Field   | Type   | Required | Description                   |
+  | ------- | ------ | -------- | ----------------------------- |
+  | postId  | string | Yes      | Unique identifier of the post |
+  | comment | string | Yes      | Content of the comment        |
+
 - Response:
   On success, a response with a **`201 Created`** status code will be returned, along with a JSON object containing the details of the created comment.
 
