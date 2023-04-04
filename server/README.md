@@ -17,8 +17,8 @@ The following endpoints are available:
 - Body:
 
 | Field    | Type   | Required | Description                   |
-| -------- | ------ | -------- | ----------------------------- | ------------- |
-| email    | string | Yes      | User's                        | email address |
+| -------- | ------ | -------- | ----------------------------- |
+| email    | string | Yes      | User's email address          |
 | password | string | Yes      | User's password for the email |
 
 Response:
