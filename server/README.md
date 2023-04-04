@@ -15,14 +15,8 @@ Method: **`POST`**
 Headers:
 Content-Type: **`application/json`**
 Body:
-| Column 1 Field | Column 2 Type | Column 3 Required | Column 4 Description |
-| ---------------- | ---------------- | ---------------- |
-| email 1, Column 1 | string 1, Column 2 | Yes 1, Column 3 | User's email address 1, Column 3 |
-| Row 2, Column 1 | Row 2, Column 2 | Row 2, Column 3 |
-| Row 3, Column 1 | Row 3, Column 2 | Row 3, Column 3 |
 
-    		Description
-
+Field Type Required Description
 email string Yes User's email address
 password string Yes User's password for the email
 Response:
