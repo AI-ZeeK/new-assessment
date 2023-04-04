@@ -16,7 +16,7 @@ export const createPost = async (req, res) => {
                 authorId,
             },
         });
-        res.status(201).json(post);
+        return res.status(201).json(post);
     }
     catch (error) {
         res.status(409).json({ message: error.message });
@@ -25,7 +25,7 @@ export const createPost = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const posts = await prisma.post.findMany();
-        res.status(200).json(posts);
+        return res.status(200).json(posts);
     }
     catch (error) {
         res.status(404).json({ message: error.message });

@@ -18,7 +18,7 @@ export const createComment: ReqRes = async (req: any, res) => {
 		});
 		console.log(789);
 
-		res.status(201).json(post);
+		return res.status(201).json(post);
 	} catch (error: any) {
 		res.status(409).json({ message: error.message });
 	}
@@ -26,7 +26,7 @@ export const createComment: ReqRes = async (req: any, res) => {
 export const getComments: ReqRes = async (req: any, res) => {
 	try {
 		const comments = await prisma.comments.findMany();
-		res.status(201).json(comments);
+		return res.status(201).json(comments);
 	} catch (error: any) {
 		res.status(409).json({ message: error.message });
 	}
