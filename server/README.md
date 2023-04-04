@@ -10,15 +10,17 @@ The following endpoints are available:
 
 #### Login
 
-URL: **`/api/auth`**
-Method: **`POST`**
-Headers:
-Content-Type: **`application/json`**
-Body:
+- URL: **`/api/auth`**
+- Method: **`POST`**
+- Headers:
+  - Content-Type: **`application/json`**
+- Body:
 
-Field Type Required Description
-email string Yes User's email address
-password string Yes User's password for the email
+| Field    | Type   | Required | Description                   |
+| -------- | ------ | -------- | ----------------------------- | ------------- |
+| email    | string | Yes      | User's                        | email address |
+| password | string | Yes      | User's password for the email |
+
 Response:
 On success, a response with a 200 OK status code will be returned, along with a JSON object containing the user's details and an access token:
 
