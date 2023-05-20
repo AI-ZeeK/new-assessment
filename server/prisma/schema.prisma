@@ -25,15 +25,16 @@ model Post {
   id        String     @id @default(uuid())
   title     String
   content   String
-  author    User       @relation(fields: [authorId], references: [id])
-  authorId  String
+  author    User?      @relation(fields: [authorId], references: [id])
+  authorId  String?
   comments  Comments[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
 
 model Comments {
-  id          String  @id @default(uuid())
+  id String @id @default(uuid())
+
   comment     String
   commentor   User?   @relation(fields: [commentorId], references: [id])
   commentorId String?

@@ -9,18 +9,19 @@ export const createPost = async (req, res) => {
         });
         if (!author)
             return res.status(404).json("error");
-        const post = await prisma.post.create({
-            data: {
-                title,
-                content,
-                authorId,
-            },
+        const post = await postService({
+            title,
+            content,
+            authorId,
         });
         return res.status(201).json(post);
     }
     catch (error) {
         res.status(409).json({ message: error.message });
     }
+};
+const postService = (data) => {
+    return prisma.post.create({ data });
 };
 export const getUserPosts = async (req, res) => {
     try {

@@ -1,65 +1,67 @@
-import { ReqRes } from "../interface.js";
-import { prisma } from "../app.js";
+import {ReqRes} from "../interface.js";
+import {prisma} from "../app.js";
+import {Prisma} from "@prisma/client";
 
 export const createPost: ReqRes = async (req, res) => {
-	try {
-		const { title, content, authorId } = req.body;
-		const author = await prisma.user.findUnique({
-			where: {
-				id: authorId,
-			},
-		});
+  try {
+    const {title, content, authorId}: any = req.body;
+    const author = await prisma.user.findUnique({
+      where: {
+        id: authorId,
+      },
+    });
+    if (!author) return res.status(404).json("error");
+    const post = await postService({
+      title,
+      content,
+      authorId,
+    });
+    return res.status(201).json(post);
+  } catch (error: any) {
+    res.status(409).json({message: error.message});
+  }
+};
 
-		if (!author) return res.status(404).json("error");
-		const post = await prisma.post.create({
-			data: {
-				title,
-				content,
-				authorId,
-			},
-		});
-		return res.status(201).json(post);
-	} catch (error: any) {
-		res.status(409).json({ message: error.message });
-	}
+const postService = (data: Prisma.PostUncheckedCreateInput) => {
+  return prisma.post.create({data});
 };
 
 export const getUserPosts: ReqRes = async (req, res) => {
-	try {
-		const posts = await prisma.post.findMany();
-		return res.status(200).json(posts);
-	} catch (error: any) {
-		res.status(404).json({ message: error.message });
-	}
+  try {
+    const posts = await prisma.post.findMany();
+    return res.status(200).json(posts);
+  } catch (error: any) {
+    res.status(404).json({message: error.message});
+  }
 };
 
 export const deletePost: ReqRes = async (req: any, res) => {
-	const { id } = req.params;
-	const userId = req.user.id;
+  const {id} = req.params;
+  const userId = req.user.id;
 
-	try {
-		console.log(12345);
-		const post = await prisma.post.findUnique({
-			where: {
-				id,
-			},
-		});
-		console.log(post, "ll", userId);
+  try {
+    console.log(12345);
+    const post = await prisma.post.findUnique({
+      where: {
+        id,
+      },
+    });
+    console.log(post, "ll", userId);
 
-		if (!post) return res.status(404).json({ message: "No Post with id" });
+    if (!post) return res.status(404).json({message: "No Post with id"});
 
-		if (post.authorId !== userId) {
-			return res.status(403).json({ mssage: "Forbidden" });
-		}
+    if (post.authorId !== userId) {
+      return res.status(403).json({mssage: "Forbidden"});
+    }
 
-		const deleted = await prisma.post.delete({
-			where: {
-				id,
-			},
-		});
+    const deleted = await prisma.post.delete({
+      where: {
+        id,
+      },
+    });
 
-		return res.status(201).json({ message: "Deleted" });
-	} catch (error) {
-		res.status(400).json({ msg: "Error Deleting" });
-	}
+    return res.status(201).json({message: "Deleted"});
+  } catch (error) {
+    res.status(400).json({msg: "Error Deleting"});
+  }
 };

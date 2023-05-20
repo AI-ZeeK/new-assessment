@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "../app.js";
 export const login = async (req, res) => {
+    console.log("sers");
     try {
         const { email, password } = req.body;
         const user = await prisma.user.findUnique({ where: { email } });
@@ -29,6 +30,7 @@ export const login = async (req, res) => {
         res.status(200).json({ user, token });
     }
     catch (error) {
+        console.log(2, error.message);
         res.status(500).json({ error: error.message });
     }
 };

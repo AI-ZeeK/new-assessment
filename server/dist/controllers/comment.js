@@ -3,10 +3,8 @@ export const createComment = async (req, res) => {
     try {
         const { postId, comment } = req.body;
         const commentorId = req.user.id;
-        console.log(commentorId);
         if (!commentorId)
             return res.status(404).json({ message: "unauthorised" });
-        console.log(456, postId);
         const post = await prisma.comments.create({
             data: {
                 comment,
@@ -14,7 +12,6 @@ export const createComment = async (req, res) => {
                 postId,
             },
         });
-        console.log(789);
         return res.status(201).json(post);
     }
     catch (error) {
