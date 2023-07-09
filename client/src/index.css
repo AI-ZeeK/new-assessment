@@ -144,14 +144,14 @@ h3 {
 
 .goals {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
   gap: 1rem;
   justify-content: center;
   align-items: flex-start;
 }
 @media screen and (max-width: 540px) {
   .goals {
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)) !important;
   }
 }
 
