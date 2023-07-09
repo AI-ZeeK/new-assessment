@@ -34,7 +34,7 @@ const getTwits = async () => {
 // Delete user Twit
 const deleteTwit = async (TwitId: any) => {
   console.log(TwitId);
-  const {data} = await API.delete(`${API_URL}/TwitId`);
+  const {data} = await API.delete(`${API_URL}/${TwitId}`);
 
   console.log(data);
   return data;

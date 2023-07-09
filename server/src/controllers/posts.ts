@@ -16,7 +16,7 @@ export const createPost: ReqRes = async (req, res) => {
       content,
       authorId,
     });
-    return res.status(201).json(post);
+    return res.status(201).json({...post, name: author.name});
   } catch (error: any) {
     res.status(409).json({message: error.message});
   }
@@ -26,10 +26,16 @@ const postService = (data: Prisma.PostUncheckedCreateInput) => {
   return prisma.post.create({data});
 };
 
-export const getUserPosts: ReqRes = async (req, res) => {
+export const getUserPosts: ReqRes = async (req: any, res) => {
   try {
+    const {id} = req.params;
+    const authors = await prisma.user.findMany();
     const posts = await prisma.post.findMany();
-    return res.status(200).json(posts);
+    const updatedPosts = posts.map((post, index) => {
+      const {name}: any = authors.find((author) => author.id === post.authorId);
+      return {name, ...post};
+    });
+    return res.status(200).json(updatedPosts);
   } catch (error: any) {
     res.status(404).json({message: error.message});
   }
@@ -40,13 +46,11 @@ export const deletePost: ReqRes = async (req: any, res) => {
   const userId = req.user.id;
 
   try {
-    console.log(12345);
     const post = await prisma.post.findUnique({
       where: {
         id,
       },
     });
-    console.log(post, "ll", userId);
 
     if (!post) return res.status(404).json({message: "No Post with id"});
 
@@ -54,13 +58,23 @@ export const deletePost: ReqRes = async (req: any, res) => {
       return res.status(403).json({mssage: "Forbidden"});
     }
 
-    const deleted = await prisma.post.delete({
+    await prisma.post.delete({
       where: {
         id,
       },
     });
-
-    return res.status(201).json({message: "Deleted"});
+    await prisma.comments.deleteMany({
+      where: {
+        postId: id,
+      },
+    });
+    const posts = await prisma.post.findMany();
+    const authors = await prisma.user.findMany();
+    const updatedPosts = posts.map((post) => {
+      const {name}: any = authors.find((author) => author.id === post.authorId);
+      return {name, ...post};
+    });
+    return res.status(200).json(updatedPosts);
   } catch (error) {
     res.status(400).json({msg: "Error Deleting"});
   }

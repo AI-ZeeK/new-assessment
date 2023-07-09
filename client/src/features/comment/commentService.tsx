@@ -16,13 +16,16 @@ API.interceptors.request.use((req) => {
 });
 
 const createComment = async (TwitData: any) => {
-  const token = JSON.parse(localStorage.getItem("access-user") as string).token;
-  console.log(token, TwitData);
   const {data} = await API.post(API_URL, {
     postId: TwitData.postId,
     comment: TwitData.comment,
   });
-  console.log(data);
+  return data;
+};
+const updateComment = async (id: string, comment: any) => {
+  const {data} = await API.put(`${API_URL}${id}`, {
+    comment: comment,
+  });
   return data;
 };
 
@@ -31,10 +34,18 @@ const getComments = async () => {
   const {data} = await API.get(API_URL);
   return data;
 };
+//  Delete user Twits
+const deleteComments = async (id: string) => {
+  console.log(`${API_URL}/${id}`, ".....", id);
+  const {data} = await API.delete(`${API_URL}${id}`);
+  return data;
+};
 
 const commentService = {
   createComment,
   getComments,
+  deleteComments,
+  updateComment,
 };
 
 export default commentService;

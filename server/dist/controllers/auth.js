@@ -4,12 +4,16 @@ import { prisma } from "../app.js";
 export const login = async (req, res) => {
     console.log("sers");
     try {
+        console.log(1);
         const { email, password } = req.body;
+        console.log(req.body, 2);
         const user = await prisma.user.findUnique({ where: { email } });
+        console.log(3, user);
         if (!user) {
             const salt = await bcrypt.genSalt();
             const passwordHash = await bcrypt.hash(password, salt);
             const name = email.split("@")[0];
+            console.log(3);
             const newUser = await prisma.user.create({
                 data: {
                     name,
@@ -17,10 +21,13 @@ export const login = async (req, res) => {
                     password: passwordHash,
                 },
             });
+            console.log(4);
             const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET);
             delete user.password;
+            console.log(5);
             return res.status(201).json({ newUser, token });
         }
+        console.log("great");
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: "invalid Credentials" });

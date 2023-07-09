@@ -57,7 +57,8 @@ export const deleteTwit: any = createAsyncThunk(
   "Twits/delete",
   async (id, thunkAPI) => {
     try {
-      return await postService.deleteTwit(id);
+      console.log(id, 123);
+      return postService.deleteTwit(id);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -112,15 +113,14 @@ export const TwitSlice = createSlice({
       state.messages = action.payload;
     });
     builder.addCase(deleteTwit.pending, (state) => {
-      state.isLoading = true;
+      //   state.isLoading = true;
     });
 
-    builder.addCase(deleteTwit.fulfilled, (state, action) => {
+    builder.addCase(deleteTwit.fulfilled, (state, {payload}) => {
       state.isLoading = false;
       state.isSuccess = true;
-      // state.Twits = state.Twits.filter(
-      // 	(Twit) => Twit._id !== action.payload.id
-      // );
+      state.posts = [...payload];
+      console.log(payload);
     });
     builder.addCase(deleteTwit.rejected, (state, action) => {
       state.isLoading = false;

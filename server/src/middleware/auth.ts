@@ -13,8 +13,9 @@ export const verifyToken: ReqRes = async (req: any, res, next: any) => {
       token = token.split(" ")[1];
     }
 
-    const verified = jwt.verify(token, <any>process.env.JWT_SECRET);
+    const verified = jwt.verify(token, `${process.env.JWT_SECRET}`);
     req.user = verified;
+    console.log(verified);
 
     next();
   } catch (error: any) {
