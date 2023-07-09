@@ -1,6 +1,6 @@
 import axios from "axios";
 const API = axios.create({
-  // baseURL: `https://assesment-eg7s.onrender.com`,
+  //   baseURL: `https://newassessment.onrender.com`,
   baseURL: `http://localhost:5000`,
 });
 const API_URL = "/api/auth/";
@@ -17,7 +17,7 @@ API.interceptors.request.use((req) => {
 // Login User
 const login = async (userData: any) => {
   console.log(userData);
-  const { data } = await API.post(API_URL, userData);
+  const {data} = await API.post(API_URL, userData);
   if (data) {
     localStorage.setItem("access-user", JSON.stringify(data));
   }
