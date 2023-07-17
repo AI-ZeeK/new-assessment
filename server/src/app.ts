@@ -50,18 +50,18 @@ app.listen(PORT, () =>
 // app.on("close", async () => {
 //   await prisma.$disconnect();
 // });
-async function main() {
-  try {
-    await prisma.$connect();
-    console.log("Connected to database");
-    // Your app logic here
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  } finally {
-    prisma.$disconnect();
-    console.log("Disconnected from database");
-  }
-}
+// async function main() {
+//   try {
+//     await prisma.$connect();
+//     console.log("Connected to database");
+//     // Your app logic here
+//   } catch (err) {
+//     console.log(err);
+//     process.exit(1);
+//   } finally {
+//     prisma.$disconnect();
+//     console.log("Disconnected from database");
+//   }
+// }
 
-main();
+// main();
