@@ -1,26 +1,30 @@
 import axios from "axios";
 const API = axios.create({
-  baseURL: `https://newassessment.onrender.com`,
-  //   baseURL: `http://localhost:5000`,
+  //   baseURL: `https://newassessment.onrender.com`,
+  baseURL: `http://localhost:5000`,
 });
 const API_URL = "/api/post";
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem("access-user")) {
-    req.headers.authorization = `Bearer ${
-      JSON.parse(localStorage.getItem("access-user") as string).token
-    }`;
+  if (localStorage.getItem("access-token")) {
+    req.headers.authorization = `Bearer ${JSON.parse(
+      localStorage.getItem("access-token") as string
+    )}`;
   }
 
   return req;
 });
 
-const createTwit = async (TwitData: any) => {
+const createTwit = async (image: string, content: string, authorId: string) => {
   const {data} = await API.post(API_URL, {
-    title: TwitData.twitTitle,
-    content: TwitData.twitContent,
-    authorId: TwitData.authorId,
+    image,
+    content,
+    authorId,
   });
+  return data;
+};
+const likePost = async (postId: string, userId: string) => {
+  const {data} = await API.put(`${API_URL}/${postId}/${userId}`);
   return data;
 };
 
@@ -30,13 +34,19 @@ const getTwits = async () => {
 
   return data;
 };
+const getMyDjengs = async (id: string) => {
+  const {data} = await API.get(`${API_URL}/users/${id}`);
+  return data;
+};
+const getDjeng = async (id: string) => {
+  const {data} = await API.get(`${API_URL}/user/${id}`);
+  return data;
+};
 
 // Delete user Twit
 const deleteTwit = async (TwitId: any) => {
-  console.log(TwitId);
   const {data} = await API.delete(`${API_URL}/${TwitId}`);
 
-  console.log(data);
   return data;
 };
 
@@ -44,6 +54,9 @@ const TwitService = {
   createTwit,
   getTwits,
   deleteTwit,
+  likePost,
+  getMyDjengs,
+  getDjeng,
 };
 
 export default TwitService;

@@ -1,15 +1,15 @@
 import axios from "axios";
 const API = axios.create({
-  baseURL: `https://newassessment.onrender.com`,
-  //   baseURL: `http://localhost:5000`,
+  //   baseURL: `https://newassessment.onrender.com`,
+  baseURL: `http://localhost:5000`,
 });
 const API_URL = "/api/comment/";
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem("access-user")) {
-    req.headers.authorization = `Bearer ${
-      JSON.parse(localStorage.getItem("access-user") as string).token
-    }`;
+  if (localStorage.getItem("access-token")) {
+    req.headers.authorization = `Bearer ${JSON.parse(
+      localStorage.getItem("access-token") as string
+    )}`;
   }
 
   return req;

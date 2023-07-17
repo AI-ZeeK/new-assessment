@@ -85,7 +85,7 @@ export const deleteComments: any = createAsyncThunk(
 );
 
 export const commentSlice = createSlice({
-  name: "Twit",
+  name: "comment",
   initialState,
   reducers: {
     reset: (state) => initialState,
@@ -98,8 +98,7 @@ export const commentSlice = createSlice({
       .addCase(createComment.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.comments = [...state.comments, payload];
-        console.log(state.comments, payload);
+        state.comments = payload;
       })
       .addCase(createComment.rejected, (state, action) => {
         state.isLoading = false;
@@ -115,10 +114,10 @@ export const commentSlice = createSlice({
         state.isSuccess = true;
         state.comments = payload;
       })
-      .addCase(getComments.rejected, (state, action) => {
+      .addCase(getComments.rejected, (state, {payload}) => {
         state.isLoading = false;
         state.isError = true;
-        state.messages = action.payload;
+        state.messages = payload;
       });
     builder
       .addCase(deleteComments.pending, (state) => {
@@ -127,8 +126,7 @@ export const commentSlice = createSlice({
       .addCase(deleteComments.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.comments = payload.allComments;
-        getComments();
+        state.comments = payload;
       })
       .addCase(deleteComments.rejected, (state, action) => {
         state.isLoading = false;
@@ -142,12 +140,12 @@ export const commentSlice = createSlice({
       .addCase(updateComment.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.comments = payload.allComments;
+        state.comments = payload;
       })
-      .addCase(updateComment.rejected, (state, action) => {
+      .addCase(updateComment.rejected, (state, {payload}) => {
         state.isLoading = false;
         state.isError = true;
-        state.messages = action.payload;
+        state.messages = payload;
       });
   },
 });

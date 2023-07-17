@@ -12,7 +12,8 @@ export const createComment = async (req, res) => {
                 postId,
             },
         });
-        return res.status(201).json(post);
+        const allComments = await CommentAuthors();
+        return res.status(201).json(allComments);
     }
     catch (error) {
         res.status(409).json({ message: error.message });
@@ -23,8 +24,8 @@ export const getComments = async (req, res) => {
         const comments = await prisma.comments.findMany();
         const authors = await prisma.user.findMany();
         const updatedComments = comments.map((comment) => {
-            const { name } = authors.find((author) => author.id === comment.commentorId);
-            return Object.assign({ name }, comment);
+            const { name, profilePhoto } = authors.find((author) => author.id === comment.commentorId);
+            return Object.assign({ name, profilePhoto }, comment);
         });
         return res.status(201).json(updatedComments);
     }
@@ -42,7 +43,7 @@ export const updatedComment = async (req, res) => {
         });
         if (!isComment)
             return res.status(404).json({ message: "Comment doesn't exist" });
-        const updatedComments = await prisma.comments.update({
+        await prisma.comments.update({
             where: {
                 id,
             },
@@ -50,8 +51,8 @@ export const updatedComment = async (req, res) => {
                 comment,
             },
         });
-        const allComments = await prisma.comments.findMany();
-        return res.status(201).json({ updatedComments, allComments });
+        const allComments = await CommentAuthors();
+        return res.status(201).json(allComments);
     }
     catch (error) {
         res.status(409).json({ message: error.message });
@@ -72,10 +73,19 @@ export const deleteComment = async (req, res) => {
                 id,
             },
         });
-        const allComments = await prisma.comments.findMany();
-        return res.status(201).json({ message: "Deleted", allComments });
+        const allComments = await CommentAuthors();
+        return res.status(201).json(allComments);
     }
     catch (error) {
-        res.status(400).json({ msg: "Error Deleting", error });
+        res.status(400).json({ message: "Error Deleting", error });
     }
+};
+const CommentAuthors = async () => {
+    const comments = await prisma.comments.findMany();
+    const authors = await prisma.user.findMany();
+    const updatedComments = comments.map((comment) => {
+        const { name, profilePhoto } = authors.find((author) => author.id === comment.commentorId);
+        return Object.assign({ name, profilePhoto }, comment);
+    });
+    return updatedComments;
 };

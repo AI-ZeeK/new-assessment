@@ -13,29 +13,44 @@ datasource db {
 }
 
 model User {
-  //   id        String     @id @default(uuid())
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  //   id             String          @id @default(uuid())
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  username       String?
+  name           String?
+  email          String          @unique
+  password       String?
+  bio            String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  profilePhoto   String?
+  posts          Post[]
+  friendRequests FriendRequest[] @relation()
+  friends        String[]        @unique
+  comments       Comments[]
+}
 
-  name      String?
-  email     String     @unique
-  password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  posts     Post[]
-  comments  Comments[]
+model FriendRequest {
+  //   id       String  @id @default(uuid())
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  sender   Boolean @default(false)
+  friendId String
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  //   id        String     @id @default(uuid())
+  //   id String @id @default(uuid())
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  title     String
-  content   String
-  author    User?      @relation(fields: [authorId], references: [id])
-  authorId  String?    @db.ObjectId
-  comments  Comments[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  image      String?
+  content    String
+  author     User?      @relation(fields: [authorId], references: [id])
+  authorId   String?
+  comments   Comments[]
+  postlikes  String[]
+  authorLike Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model Comments {
@@ -44,7 +59,13 @@ model Comments {
 
   comment     String
   commentor   User?   @relation(fields: [commentorId], references: [id])
-  commentorId String? @db.ObjectId
+  commentorId String?
   Post        Post?   @relation(fields: [postId], references: [id])
-  postId      String? @db.ObjectId
+  postId      String?
+}
+
+enum RequestState {
+  ACCEPTED
+  PENDING
+  REJECTED
 }

@@ -18,17 +18,19 @@ export const login = async (req, res) => {
             });
             const token = jwt.sign({ id: newUser.id }, `${process.env.JWT_SECRET}`);
             delete newUser.password;
+            res.cookie("MyUser", token, { maxAge: 3600000, httpOnly: true });
             return res.status(201).json({ newUser, token });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: "invalid Credentials" });
+            return res.status(400).json({ message: "invalid Credentials" });
         }
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: user.id }, `${process.env.JWT_SECRET}`);
+        res.cookie("MyUser", token, { maxAge: 3600000, httpOnly: true });
         delete user.password;
         res.status(200).json({ user, token });
     }
     catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };

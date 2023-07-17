@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {createTwit} from "../features/post/postSlice";
+import {createDjeng} from "../features/post/postSlice";
 
 const GoalForm = () => {
   const {user} = useSelector((state: any) => state.auth);
@@ -11,7 +11,7 @@ const GoalForm = () => {
   const onSubmit = (e: any) => {
     e.preventDefault();
 
-    dispatch(createTwit({twitTitle, twitContent, authorId: user.id}));
+    dispatch(createDjeng({twitTitle, twitContent, authorId: user.id}));
     setTwitTitle("");
     setTwitContent("");
   };
