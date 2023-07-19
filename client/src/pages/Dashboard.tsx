@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import PostForm from "../components/PostForm";
 import Spinner from "../components/Spinner";
@@ -26,7 +26,7 @@ import {getFriendPosts} from "../features/user/userSlice";
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const location = useLocation();
   const {user} = useSelector((state: RootState) => state.auth);
   const {modal2Img, deletePostId} = useSelector(
     (state: RootState) => state.app
@@ -37,6 +37,7 @@ const Dashboard = () => {
 
   const {sentFriendRequests} = useSelector((state: RootState) => state.friend);
   const {comments} = useSelector((state: RootState) => state.comment);
+
   useEffect(() => {
     if (isError) {
       console.log(messages);
@@ -60,6 +61,18 @@ const Dashboard = () => {
     dispatch(getComments());
   }, [sentFriendRequests]);
   useEffect(() => {
+    const userData =
+      localStorage.getItem("access-user") !== null
+        ? JSON.parse(localStorage.getItem("access-user") as string)
+        : null;
+
+    if (user && location.pathname === "/auth") {
+      navigate("/");
+    }
+
+    if (userData && location.pathname === "/auth") {
+      navigate("/");
+    }
     dispatch(getFriendPosts(user?.id));
     dispatch(closeModal());
     dispatch(closeModal2());

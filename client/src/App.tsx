@@ -19,7 +19,6 @@ import UsersList from "./pages/UsersList";
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const {user} = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -28,15 +27,6 @@ function App() {
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
 
-    if (user && location.pathname === "/auth") {
-      //   dispatch(getUser(userData.id));
-      navigate("/");
-    }
-
-    if (userData && location.pathname === "/auth") {
-      //   dispatch(getUser(userData.id));
-      navigate("/");
-    }
     if (!userData) {
       navigate("/auth");
     }
