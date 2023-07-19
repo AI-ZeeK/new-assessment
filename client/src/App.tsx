@@ -32,6 +32,11 @@ function App() {
       //   dispatch(getUser(userData.id));
       navigate("/");
     }
+
+    if (user && userData && location.pathname === "/auth") {
+      //   dispatch(getUser(userData.id));
+      navigate("/");
+    }
     if (!userData) {
       navigate("/auth");
     }

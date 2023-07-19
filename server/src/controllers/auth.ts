@@ -24,12 +24,13 @@ export const login: ReqRes = async (req, res) => {
       delete newUser.password;
       res.cookie("MyUser", token, {maxAge: 3600000, httpOnly: true});
 
-      return res.status(201).json({newUser, token});
+      return res.status(201).json({user: newUser, token});
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({message: "invalid Credentials"});
     }
+
     const token = jwt.sign({id: user.id}, `${process.env.JWT_SECRET}`);
     res.cookie("MyUser", token, {maxAge: 3600000, httpOnly: true});
     delete user.password;

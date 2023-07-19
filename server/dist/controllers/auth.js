@@ -19,7 +19,7 @@ export const login = async (req, res) => {
             const token = jwt.sign({ id: newUser.id }, `${process.env.JWT_SECRET}`);
             delete newUser.password;
             res.cookie("MyUser", token, { maxAge: 3600000, httpOnly: true });
-            return res.status(201).json({ newUser, token });
+            return res.status(201).json({ user: newUser, token });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {

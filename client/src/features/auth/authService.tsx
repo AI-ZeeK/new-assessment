@@ -18,7 +18,6 @@ API.interceptors.request.use((req) => {
 // Login User
 const login = async (userData: any) => {
   const {data} = await API.post(API_URL, userData);
-  console.log(data);
   if (data) {
     localStorage.setItem(
       "access-user",
@@ -37,7 +36,6 @@ const logout = () => {
 };
 
 export const updateProfilePhotoApi = async (id: string, profilePhoto: any) => {
-  console.log("update-photo");
   const {data} = await API.patch(`${USER_API_URL}/profile/${id}`, {
     profilePhoto,
   });
@@ -59,8 +57,6 @@ const getUser = async (id: string) => {
   return data;
 };
 const updateBio = async (id: string, bio: string) => {
-  console.log("update");
-  console.log(id, bio);
   const {data} = await API.patch(`${USER_API_URL}/bio/${id}`, {bio});
   if (data) {
     localStorage.setItem(
@@ -68,7 +64,6 @@ const updateBio = async (id: string, bio: string) => {
       JSON.stringify({...data, profilePhoto: null})
     );
   }
-  console.log(data);
   return data;
 };
 
