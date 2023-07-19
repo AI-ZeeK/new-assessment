@@ -76,7 +76,7 @@ const Profile = ({mine}: Props) => {
 
   return (
     <div className="profile-page">
-      {getDjengsState.isLoading && <Spinner />}
+      {/* {getDjengsState.isLoading && <Spinner />} */}
 
       <section className="profile-info-section">
         <div className="profile-img">

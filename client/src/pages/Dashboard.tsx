@@ -82,7 +82,7 @@ const Dashboard = () => {
   //   }
   return (
     <>
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
 
       {/* <div className="form-content">
         <PostForm />

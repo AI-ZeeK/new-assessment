@@ -49,11 +49,10 @@ const Login = () => {
     dispatch(login(userData));
   };
 
-  if (isLoading) {
-    return <Spinner />;
-  }
   return (
     <div className="login-box">
+      {isLoading && <Spinner />}
+
       <section className="heading">
         <h1>
           <FaUserAlt /> Login
