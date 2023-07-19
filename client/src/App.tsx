@@ -27,7 +27,7 @@ function App() {
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
 
-    if (!userData) {
+    if (!userData && !user) {
       navigate("/auth");
     }
   });

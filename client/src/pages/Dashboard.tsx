@@ -66,13 +66,10 @@ const Dashboard = () => {
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
 
-    if (user && location.pathname === "/auth") {
+    if (user && userData && location.pathname === "/auth") {
       navigate("/");
     }
 
-    if (userData && location.pathname === "/auth") {
-      navigate("/");
-    }
     dispatch(getFriendPosts(user?.id));
     dispatch(closeModal());
     dispatch(closeModal2());
