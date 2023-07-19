@@ -1,7 +1,7 @@
 import axios from "axios";
 const API = axios.create({
-  //   baseURL: `https://newassessment.onrender.com`,
-  baseURL: `http://localhost:5000`,
+  baseURL: `https://newassessment.onrender.com`,
+  //   baseURL: `http://localhost:5000`,
 });
 const API_URL = "/api/auth/";
 const USER_API_URL = "/api/user";

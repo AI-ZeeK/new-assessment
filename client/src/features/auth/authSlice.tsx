@@ -38,6 +38,7 @@ interface initialTypes {
   isLoading: boolean;
   message: any;
   userState: QueryState;
+  infoState: QueryState;
   myUserState: QueryState;
 }
 
@@ -57,6 +58,11 @@ const initialState: initialTypes = {
   isSuccess: false,
   isLoading: false,
   userState: {
+    isError: false,
+    isSuccess: false,
+    isLoading: false,
+  },
+  infoState: {
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -199,31 +205,30 @@ export const authSlice = createSlice({
       });
     builder
       .addCase(updateProfilePhoto.pending, (state) => {
-        state.isLoading = true;
+        state.infoState.isLoading = true;
       })
       .addCase(updateProfilePhoto.fulfilled, (state, {payload}) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.infoState.isLoading = false;
+        state.infoState.isSuccess = true;
         state.user = payload;
       })
       .addCase(updateProfilePhoto.rejected, (state, {payload}) => {
-        state.isLoading = false;
-        state.isError = true;
+        state.infoState.isLoading = false;
+        state.infoState.isError = true;
         state.message = payload;
       });
     builder
       .addCase(updateBio.pending, (state) => {
-        state.isLoading = true;
+        state.infoState.isLoading = true;
       })
       .addCase(updateBio.fulfilled, (state, {payload}) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.infoState.isLoading = false;
+        state.infoState.isSuccess = true;
         state.user = payload;
-        console.log(payload);
       })
       .addCase(updateBio.rejected, (state, {payload}) => {
-        state.isLoading = false;
-        state.isError = true;
+        state.infoState.isLoading = false;
+        state.infoState.isError = true;
         state.message = payload;
       });
     builder
