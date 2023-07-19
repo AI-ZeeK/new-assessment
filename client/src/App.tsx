@@ -33,7 +33,7 @@ function App() {
       navigate("/");
     }
 
-    if (user && userData && location.pathname === "/auth") {
+    if (userData && location.pathname === "/auth") {
       //   dispatch(getUser(userData.id));
       navigate("/");
     }
