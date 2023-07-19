@@ -15,6 +15,7 @@ import FriendRequest from "./pages/FriendRequest";
 import FriendsPosts from "./pages/FriendsPosts";
 import {RootState} from "./app/store";
 import UsersList from "./pages/UsersList";
+import F04 from "./pages/404";
 
 function App() {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ function App() {
               <Route path="/friendrequests" element={<FriendRequest />}></Route>
               <Route path="/friends" element={<FriendsPosts />}></Route>
               <Route path="/users" element={<UsersList />}></Route>
+              <Route path="*" element={<F04 />}></Route>
             </Routes>
           </section>
         </main>
