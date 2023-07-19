@@ -18,9 +18,12 @@ import {
   closeModal2,
   closeModal3,
   closeModal4,
+  openBioUpdateModal,
   openModal4,
+  setModalOpen,
 } from "../features/app/AppSlice";
 import ImageModal, {
+  AddBioModal,
   AddProfilePictureModal,
   PostModal,
 } from "../components/PostModal";
@@ -29,6 +32,7 @@ import PostItem from "../components/PostItem";
 import PostItemSkeleton from "../components/PostItemSkeleton";
 import Modal, {DeleteModal} from "../components/Modal";
 import Spinner from "../components/Spinner";
+import {AiFillFileAdd, AiOutlinePlus} from "react-icons/ai";
 
 type Props = {
   mine: boolean;
@@ -96,24 +100,57 @@ const Profile = ({mine}: Props) => {
           <h4 className="profile-name">{mine ? user?.name : myUser?.name}</h4>
           <p className="profile-email">{mine ? user?.email : myUser?.email}</p>
         </div>
-        {mine && (
+        {/* {mine && (
           <div className="edit-user?">
             <FaUserEdit />
           </div>
-        )}
+        )} */}
       </section>
       <section>
-        <div></div>
+        <div>
+          <p
+            style={{
+              textAlign: "start",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            {mine ? user?.bio : myUser?.bio}
+          </p>
+        </div>
       </section>
-      <section>
-        {mine && (
-          <div style={{display: "flex", justifyContent: "flex-end"}}>
-            <button className="btn" onClick={onLogout}>
-              <FaSignOutAlt /> Logout
-            </button>
-          </div>
-        )}
-      </section>
+      {mine && (
+        <>
+          <div className="line-through"></div>
+
+          <section
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <button
+                className="btn btn-reverse"
+                style={{fontSize: 14, padding: "8px 14px"}}
+                onClick={() => dispatch(openBioUpdateModal())}
+              >
+                <AiFillFileAdd fontSize={18} /> Add Info
+              </button>
+            </div>
+
+            <div style={{display: "flex", justifyContent: "flex-end"}}>
+              <button
+                className="btn"
+                onClick={onLogout}
+                style={{fontSize: 14, padding: "8px 14px"}}
+              >
+                <FaSignOutAlt fontSize={18} /> Logout
+              </button>
+            </div>
+          </section>
+        </>
+      )}
       <div className="line-through"></div>
       <section className="content">
         {userPosts.length > 0 ? (
@@ -146,8 +183,11 @@ const Profile = ({mine}: Props) => {
           </div>
         )}
       </section>
-
+      <div className="addDjeng" onClick={() => dispatch(setModalOpen())}>
+        <AiOutlinePlus />
+      </div>
       <AddProfilePictureModal />
+      <AddBioModal />
       <Modal />
       <ImageModal img={modal2Img} />
       <PostModal />

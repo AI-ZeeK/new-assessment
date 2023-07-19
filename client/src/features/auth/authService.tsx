@@ -58,11 +58,25 @@ const getUser = async (id: string) => {
   }
   return data;
 };
+const updateBio = async (id: string, bio: string) => {
+  console.log("update");
+  console.log(id, bio);
+  const {data} = await API.patch(`${USER_API_URL}/bio/${id}`, {bio});
+  if (data) {
+    localStorage.setItem(
+      "access-user",
+      JSON.stringify({...data, profilePhoto: null})
+    );
+  }
+  console.log(data);
+  return data;
+};
 
 const authService = {
   logout,
   login,
   getUser,
+  updateBio,
 };
 
 export default authService;

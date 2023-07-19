@@ -10,7 +10,11 @@ import {
   closeModal3,
   closeModal4,
   closeDeleteModal,
+  setModalOpen,
 } from "../features/app/AppSlice";
+import {AiOutlinePlus} from "react-icons/ai";
+import ImageModal, {PostModal} from "../components/PostModal";
+import Modal, {DeleteModal} from "../components/Modal";
 
 type Props = {};
 
@@ -19,7 +23,9 @@ const FriendsPosts = (props: Props) => {
     (state: RootState) => state.friend
   );
   const {user} = useSelector((state: RootState) => state.auth);
-
+  const {modal2Img, deletePostId} = useSelector(
+    (state: RootState) => state.app
+  );
   const {comments} = useSelector((state: RootState) => state.comment);
   const dispatch = useDispatch();
 
@@ -75,6 +81,13 @@ const FriendsPosts = (props: Props) => {
           )}
         </section>
       ))}
+      <div className="addDjeng" onClick={() => dispatch(setModalOpen())}>
+        <AiOutlinePlus />
+      </div>
+      <Modal />
+      <ImageModal img={modal2Img} />
+      <PostModal />
+      <DeleteModal deletePostId={deletePostId} />
     </div>
   );
 };

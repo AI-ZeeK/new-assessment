@@ -115,7 +115,13 @@ const Modal = (props: Props) => {
             className="profile"
             onClick={() => navigate(`/profile/${user?.id}`)}
           >
-            <div className="profile-img">{user?.name.slice(0, 1)}</div>
+            <div className="profile-img">
+              {user?.profilePhoto ? (
+                <img src={user?.profilePhoto} alt="" />
+              ) : (
+                <p>{user?.name.slice(0, 1)}</p>
+              )}
+            </div>
             <h4 className="profile-name">{user?.name}</h4>
           </div>
           <div className="close" onClick={() => dispatch(closeModal())}>

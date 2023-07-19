@@ -14,6 +14,7 @@ import SideBar from "./components/SideBar";
 import FriendRequest from "./pages/FriendRequest";
 import FriendsPosts from "./pages/FriendsPosts";
 import {RootState} from "./app/store";
+import UsersList from "./pages/UsersList";
 
 function App() {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ function App() {
               <Route path="/auth" element={<Login />}></Route>
               <Route path="/friendrequests" element={<FriendRequest />}></Route>
               <Route path="/friends" element={<FriendsPosts />}></Route>
+              <Route path="/users" element={<UsersList />}></Route>
             </Routes>
           </section>
         </main>

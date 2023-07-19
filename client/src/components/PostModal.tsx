@@ -1,5 +1,10 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {AiFillLike, AiOutlineUserAdd} from "react-icons/ai";
+import {
+  AiFillLike,
+  AiOutlineFieldTime,
+  AiOutlineUserAdd,
+  AiOutlineUserDelete,
+} from "react-icons/ai";
 import {BsThreeDots, BsUpload} from "react-icons/bs";
 import {IoClose} from "react-icons/io5";
 import {TfiComments} from "react-icons/tfi";
@@ -14,8 +19,9 @@ import {
   closeModal4,
   openDeleteModal,
   setDeletePostId,
+  closeBioUpdateModal,
 } from "../features/app/AppSlice";
-import {updateProfilePhoto} from "../features/auth/authSlice";
+import {updateBio, updateProfilePhoto} from "../features/auth/authSlice";
 import {
   deleteComments,
   updateComment,
@@ -25,6 +31,8 @@ import {deleteTwit, likePost} from "../features/post/postSlice";
 import PostItemSkeleton from "./PostItemSkeleton";
 import {MdDelete, MdDeleteForever} from "react-icons/md";
 import {CiEdit} from "react-icons/ci";
+import {GoVerified} from "react-icons/go";
+import {sendFriendRequest} from "../features/user/userSlice";
 
 type Props = {};
 
@@ -72,10 +80,76 @@ export default ImageModal;
 export const PostModal = () => {
   const modalRef: any = useRef(null);
   const modalOverlayRef: any = useRef(null);
+  const optionsRef: any = useRef(null);
+  const [comment, setComment] = useState("");
+  const [isUpdateComment, setIsUpdateComment] = useState(false);
+  const [commentID, setCommentId] = useState("");
   const {comments} = useSelector((state: RootState) => state.comment);
   const dispatch = useDispatch();
   const {isModal3Open} = useSelector((state: RootState) => state.app);
-  const optionsRef: any = useRef(null);
+
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [openOptions, setOpenOptions] = useState(false);
+  const {user} = useSelector((state: RootState) => state.auth);
+  const {friendsPosts, friendsState, friendRequests, sentFriendRequests} =
+    useSelector((state: RootState) => state.friend);
+  const {post, djengState} = useSelector((state: RootState) => state.posts);
+  const navigate = useNavigate();
+  const handeCommentOpen = () => {
+    setIsCommentOpen((prev) => !prev);
+  };
+  const handleDelete = () => {
+    dispatch(deleteTwit(post.id));
+  };
+  const handleDeleteComment = (commentId: string) => {
+    dispatch(deleteComments(commentId));
+  };
+  const handleSetUpdateComment = ({id, comment}: any) => {
+    setIsUpdateComment((prev) => !prev);
+    !isUpdateComment && setComment(comment);
+    setCommentId(id);
+  };
+  const handlePostLike = (postId: string, userId: any) => {
+    console.log(postId, userId);
+    dispatch(likePost([postId, userId]));
+  };
+
+  const liked = post.postlikes.filter((iLiked: string) => {
+    return user?.id === iLiked;
+  });
+
+  const isFriend = friendsPosts.filter((isfriend: any) => {
+    return isfriend.id === post.authorId;
+  });
+
+  const isSentFriendRequest = sentFriendRequests.filter((isfriend: any) => {
+    return isfriend.friendId === post.authorId && isfriend.userId === user?.id;
+  });
+
+  const isFriendRequest = friendRequests.filter((isfriend: any) => {
+    return isfriend.friendId === post.authorId && isfriend.userId === user?.id;
+  });
+
+  const postComments = comments.filter((comm: any) => {
+    return comm.postId === post.id;
+  });
+
+  const handleOpenModal2 = () => {
+    dispatch(openModal2(post.image));
+  };
+
+  const handleCommentSubmit = (e: any) => {
+    e.preventDefault();
+    isUpdateComment && dispatch(updateComment([commentID, comment]));
+    !isUpdateComment && dispatch(createComment({postId: post.id, comment}));
+    setComment("");
+    setIsUpdateComment(false);
+  };
+  const handleConfirmDelete = () => {
+    dispatch(openDeleteModal());
+    dispatch(setDeletePostId(post.id));
+    setOpenOptions(false);
+  };
 
   const handleClickOutside = (event: any) => {
     if (
@@ -98,55 +172,7 @@ export const PostModal = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [commentLength, setCommentLength] = useState<number>(0);
-  const [openOptions, setOpenOptions] = useState(false);
-  const {user} = useSelector((state: RootState) => state.auth);
-  const [comment, setComment] = useState("");
-  const [isUpdateComment, setIsUpdateComment] = useState(false);
-  const [commentID, setCommentId] = useState("");
-  const {post, djengState} = useSelector((state: RootState) => state.posts);
-  const navigate = useNavigate();
-  const handeCommentOpen = () => {
-    setIsCommentOpen((prev) => !prev);
-  };
-  const handleDelete = () => {
-    dispatch(deleteTwit(post.id));
-  };
-  const handleDeleteComment = (commentId: string) => {
-    dispatch(deleteComments(commentId));
-  };
-  const handleSetUpdateComment = ({id, comment}: any) => {
-    setIsUpdateComment((prev) => !prev);
-    !isUpdateComment && setComment(comment);
-    setCommentId(id);
-  };
-  const handlePostLike = (postId: string, userId: any) => {
-    console.log(postId, userId);
-    dispatch(likePost([postId, userId]));
-  };
-  const liked = post.postlikes.filter((iLiked: string) => {
-    return user?.id === iLiked;
-  });
-  const handleOpenModal2 = () => {
-    dispatch(openModal2(post.image));
-  };
 
-  const handleCommentSubmit = (e: any) => {
-    e.preventDefault();
-    isUpdateComment && dispatch(updateComment([commentID, comment]));
-    !isUpdateComment && dispatch(createComment({postId: post.id, comment}));
-    setComment("");
-    setIsUpdateComment(false);
-  };
-  const handleConfirmDelete = () => {
-    dispatch(openDeleteModal());
-    dispatch(setDeletePostId(post.id));
-    setOpenOptions(false);
-  };
-  const postComments = comments.filter((comm: any) => {
-    return comm.postId === post.id;
-  });
   return (
     <section
       ref={modalOverlayRef}
@@ -189,9 +215,45 @@ export const PostModal = () => {
                 <BsThreeDots />
               </button>
               <ul className={`options-list ${openOptions ? "active" : ""}`}>
-                <li>
-                  <AiOutlineUserAdd className="icon" /> <span>Add Friend</span>
-                </li>
+                {user?.id !== post.authorId && (
+                  <>
+                    {Boolean(isFriend.length) ? (
+                      <li
+                        onClick={() =>
+                          dispatch(sendFriendRequest([post.authorId, user?.id]))
+                        }
+                      >
+                        <AiOutlineUserDelete className="icon" />{" "}
+                        <span>Unfriend</span>
+                      </li>
+                    ) : Boolean(isSentFriendRequest.length) ? (
+                      <li style={{background: "#00000088", color: "#ffffff"}}>
+                        <AiOutlineFieldTime fontSize={24} />
+                        <span>Pending</span>
+                      </li>
+                    ) : Boolean(isFriendRequest.length) ? (
+                      <>
+                        <li
+                          onClick={() => {
+                            navigate("/friendrequests");
+                          }}
+                        >
+                          <GoVerified className="icon" />{" "}
+                          <span>Verify Request</span>
+                        </li>
+                      </>
+                    ) : (
+                      <li
+                        onClick={() =>
+                          dispatch(sendFriendRequest([post.authorId, user?.id]))
+                        }
+                      >
+                        <AiOutlineUserAdd className="icon" />{" "}
+                        <span>Add Friend</span>
+                      </li>
+                    )}
+                  </>
+                )}
                 {user?.id === post.authorId && (
                   <li onClick={handleConfirmDelete}>
                     <MdDeleteForever className="icon" /> <span>Delete</span>
@@ -209,11 +271,6 @@ export const PostModal = () => {
           >
             {post.content}
           </small>
-          {/* {user?.id === post.authorId && (
-                <button className="close" onClick={handleDelete}>
-                  <IoClose />
-                </button>
-              )} */}
 
           {post.image && (
             <div className="image-box" onClick={handleOpenModal2}>
@@ -433,6 +490,104 @@ export const AddProfilePictureModal = (props: Props) => {
                 ref={fileInputRef}
                 onChange={onDrop}
               />
+            </div>
+
+            <div className="form-block">
+              <button type="submit" className="btn btn-block">
+                Update
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+  );
+};
+export const AddBioModal = (props: Props) => {
+  const modalRef: any = useRef(null);
+  const modalOverlayRef: any = useRef(null);
+  const [bio, setBio] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {user} = useSelector((state: any) => state.auth);
+  const {isBioUpdateModalOpen} = useSelector((state: RootState) => state.app);
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+
+    dispatch(updateBio([user?.id, bio]));
+    dispatch(closeBioUpdateModal());
+  };
+
+  const handleClickOutside = (event: any) => {
+    if (
+      modalRef.current &&
+      modalOverlayRef.current &&
+      modalOverlayRef.current.contains(event.target) &&
+      !modalRef.current.contains(event.target)
+    ) {
+      dispatch(closeBioUpdateModal());
+    }
+  };
+  const handleChangeInput = (e: any) => {
+    const scriptTagRegex: RegExp =
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+
+    if (scriptTagRegex.test(e.target.value)) {
+      setBio("");
+      alert(`That's hilarious bruv`);
+    } else {
+      setBio(e.target.value.slice(0, 104));
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <section
+      ref={modalOverlayRef}
+      className={`modal-overlay  ${isBioUpdateModalOpen ? "active" : ""}`}
+    >
+      <div ref={modalRef} className="modal">
+        <div className="modal-head">
+          <div className="profile" onClick={() => navigate(`/profile`)}>
+            <div className="profile-img">
+              {user?.profilePhoto ? (
+                <img src={user?.profilePhoto} alt="" />
+              ) : (
+                <p>{user?.name.slice(0, 1)}</p>
+              )}
+            </div>
+            <h4 className="profile-name">{user?.name}</h4>
+          </div>
+          <div
+            className="close"
+            onClick={() => dispatch(closeBioUpdateModal())}
+          >
+            <IoClose />
+          </div>
+        </div>
+        <div className="line-through" />
+        <section className="post-form">
+          <form action="forms-block" onSubmit={onSubmit}>
+            <div className="forms-box">
+              <textarea
+                className="form-control"
+                name="content"
+                required
+                rows={4}
+                value={bio}
+                onChange={handleChangeInput}
+                placeholder="Write a message"
+              ></textarea>
+            </div>
+            <div className="content-length">
+              <span>{bio.length}/104</span>
             </div>
 
             <div className="form-block">

@@ -42,7 +42,11 @@ const GetSentFriendRequests = async (userId: string) => {
 };
 
 const GetFriendPosts = async (userId: string) => {
-  const {data} = await API.get(`${API_URL}/${userId}`);
+  const {data} = await API.get(`${API_URL}/${userId}/posts`);
+  return data;
+};
+const GetAllUsers = async () => {
+  const {data} = await API.get(`${API_URL}/all`);
   return data;
 };
 
@@ -52,6 +56,7 @@ const userService = {
   GetFriendRequests,
   GetFriendPosts,
   GetSentFriendRequests,
+  GetAllUsers,
 };
 
 export default userService;

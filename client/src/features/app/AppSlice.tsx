@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {NavTypes, navData} from "../../data/NavData";
 
 interface InitialTypes {
   isModalOpen: boolean;
@@ -6,10 +7,12 @@ interface InitialTypes {
   isModal3Open: boolean;
   isModal4Open: boolean;
   isDeleteModalOpen: boolean;
+  isBioUpdateModalOpen: boolean;
   modal2Img: any;
   postBlock: Post;
   profilePicture: string;
   deletePostId: string;
+  navData: NavTypes[];
 }
 export interface Post {
   id: string;
@@ -27,8 +30,10 @@ const initialState: InitialTypes = {
   isModal2Open: false,
   isModal3Open: false,
   isModal4Open: false,
+  isBioUpdateModalOpen: false,
   isDeleteModalOpen: false,
   modal2Img: null,
+  navData: navData,
   profilePicture: "",
   deletePostId: "",
   postBlock: {
@@ -95,11 +100,25 @@ export const AppSlice = createSlice({
     closeDeleteModal: (state) => {
       state.isDeleteModalOpen = false;
     },
+    openBioUpdateModal: (state) => {
+      state.isBioUpdateModalOpen = true;
+    },
+    closeBioUpdateModal: (state) => {
+      state.isBioUpdateModalOpen = false;
+    },
     setPostBlock: (state, {payload}) => {
       state.postBlock = payload;
     },
     setDeletePostId: (state, {payload}) => {
       state.deletePostId = payload;
+    },
+    setNavData: (state, {payload}) => {
+      const x = state.navData.map((navItem) => {
+        return payload.id === navItem.id
+          ? {...navItem, state: true}
+          : {...navItem, state: false};
+      });
+      state.navData = x;
     },
   },
 });
@@ -117,5 +136,8 @@ export const {
   openDeleteModal,
   closeDeleteModal,
   setDeletePostId,
+  setNavData,
+  openBioUpdateModal,
+  closeBioUpdateModal,
 } = AppSlice.actions;
 export default AppSlice.reducer;

@@ -115,6 +115,10 @@ h3 {
             overflow: hidden;
             white-space: nowrap;
           }
+          &.active::after {
+            width: 100%;
+          }
+
           &:hover {
             // background-color: #d9d9d9a3;
             backdrop-filter: saturate(120%);
@@ -140,9 +144,9 @@ h3 {
 }
 
 @media (min-width: 540px) and (max-width: 992px) {
-  .container .app-body {
-    // grid-template-columns: 1fr 3fr !important;
-  }
+  //   .container .app-body {
+  //     // grid-template-columns: 1fr 3fr !important;
+  //   }
 }
 @media screen and (max-width: 540px) {
   .non-mobile {
@@ -177,6 +181,9 @@ h3 {
         border-radius: 8px;
         transform: translateX(50%);
         transition: 200ms ease;
+      }
+      &.active::after {
+        width: 100%;
       }
       &:hover {
         backdrop-filter: saturate(120%);

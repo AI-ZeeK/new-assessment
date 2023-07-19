@@ -25,7 +25,7 @@ model User {
   profilePhoto   String?
   posts          Post[]
   friendRequests FriendRequest[] @relation()
-  friends        String[]        @unique
+  friends        String[]
   comments       Comments[]
 }
 
@@ -34,7 +34,7 @@ model FriendRequest {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   sender   Boolean @default(false)
   friendId String
-  userId   String
+  userId   String  @db.ObjectId
   user     User    @relation(fields: [userId], references: [id])
 }
 
@@ -45,7 +45,7 @@ model Post {
   image      String?
   content    String
   author     User?      @relation(fields: [authorId], references: [id])
-  authorId   String?
+  authorId   String?    @db.ObjectId
   comments   Comments[]
   postlikes  String[]
   authorLike Boolean    @default(false)
@@ -59,9 +59,9 @@ model Comments {
 
   comment     String
   commentor   User?   @relation(fields: [commentorId], references: [id])
-  commentorId String?
+  commentorId String? @db.ObjectId
   Post        Post?   @relation(fields: [postId], references: [id])
-  postId      String?
+  postId      String? @db.ObjectId
 }
 
 enum RequestState {

@@ -24,51 +24,6 @@ export const AddOrRemoveFriendRequest = async (req, res) => {
             return friendId === user.id;
         });
         if (!isFriend) {
-            const isReceivedFriendRequest = await prisma.friendRequest.findMany({
-                where: {
-                    userId: user.id,
-                    friendId: friendId,
-                    sender: false,
-                },
-            });
-            if (isReceivedFriendRequest.length) {
-                user.friends.push(friend.id);
-                friend.friends.push(user.id);
-                await prisma.user.update({
-                    where: {
-                        id: user.id,
-                    },
-                    data: {
-                        friends: user.friends,
-                    },
-                });
-                await prisma.user.update({
-                    where: {
-                        id: friend.id,
-                    },
-                    data: {
-                        friends: friend.friends,
-                    },
-                });
-                await prisma.friendRequest.deleteMany({
-                    where: {
-                        userId: user.id,
-                        friendId: friend.id,
-                    },
-                });
-                await prisma.friendRequest.deleteMany({
-                    where: {
-                        userId: friend.id,
-                        friendId: user.id,
-                    },
-                });
-                const allRequests = await prisma.friendRequest.findMany({
-                    where: {
-                        userId: user.id,
-                    },
-                });
-                res.status(201).json(allRequests);
-            }
             const isSentFriendRequest = await prisma.friendRequest.findMany({
                 where: {
                     userId: user.id,
@@ -92,6 +47,67 @@ export const AddOrRemoveFriendRequest = async (req, res) => {
                     sender: false,
                 },
             });
+            const isReceivedFriendRequest = await prisma.friendRequest.findMany({
+                where: {
+                    userId: user.id,
+                    friendId: friend.id,
+                    sender: false,
+                },
+            });
+            if (isReceivedFriendRequest.length) {
+                const isUserFriend = user.friends.filter((friendId) => {
+                    return friendId === friend.id;
+                });
+                const isFriendUser = friend.friends.filter((userId) => {
+                    return userId === user.id;
+                });
+                user.friends.push(friend.id);
+                friend.friends.push(user.id);
+                if (!isUserFriend.length) {
+                    await prisma.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            friends: user.friends,
+                        },
+                    });
+                }
+                if (!isFriendUser.length) {
+                    await prisma.user.update({
+                        where: {
+                            id: friend.id,
+                        },
+                        data: {
+                            friends: friend.friends,
+                        },
+                    });
+                }
+                await prisma.friendRequest.deleteMany({
+                    where: {
+                        userId: user.id,
+                        friendId: friend.id,
+                    },
+                });
+                await prisma.friendRequest.deleteMany({
+                    where: {
+                        userId: friend.id,
+                        friendId: user.id,
+                    },
+                });
+                const allRequests = await prisma.friendRequest.findMany({
+                    where: {
+                        userId: user.id,
+                        sender: true,
+                    },
+                });
+                const authors = await prisma.user.findMany();
+                const myRequests = allRequests.map((requests) => {
+                    const { name, profilePhoto } = authors.find((author) => author.id === requests.friendId);
+                    return Object.assign(Object.assign({}, requests), { name, profilePhoto });
+                });
+                return res.status(201).json(myRequests);
+            }
         }
         if (isFriend) {
             const newUserFriends = user.friends.filter((friendId) => {
@@ -138,7 +154,6 @@ export const AcceptFriendRequest = async (req, res) => {
     try {
         const { requestId } = req.params;
         const { requestState } = req.body;
-        console.log(requestState, typeof requestState);
         if (!requestId)
             return res.status(400).json({ message: "Problem with request" });
         const request = await prisma.friendRequest.findUnique({
@@ -177,52 +192,61 @@ export const AcceptFriendRequest = async (req, res) => {
             });
         }
         if (requestState) {
-            console.log(1);
+            const isUserFriend = user.friends.filter((friendId) => {
+                return friendId === friend.id;
+            });
+            const isFriendUser = friend.friends.filter((userId) => {
+                return userId === user.id;
+            });
             user.friends.push(friend.id);
             friend.friends.push(user.id);
-            console.log(2);
-            await prisma.user.update({
-                where: {
-                    id: user.id,
-                },
-                data: {
-                    friends: user.friends,
-                },
-            });
-            console.log(3);
-            await prisma.user.update({
-                where: {
-                    id: friend.id,
-                },
-                data: {
-                    friends: friend.friends,
-                },
-            });
-            console.log(4);
+            if (!isUserFriend.length) {
+                await prisma.user.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        friends: user.friends,
+                    },
+                });
+            }
+            if (!isFriendUser.length) {
+                await prisma.user.update({
+                    where: {
+                        id: friend.id,
+                    },
+                    data: {
+                        friends: friend.friends,
+                    },
+                });
+            }
             await prisma.friendRequest.deleteMany({
                 where: {
                     userId: user.id,
                     friendId: friend.id,
                 },
             });
-            console.log(5);
             await prisma.friendRequest.deleteMany({
                 where: {
                     userId: friend.id,
                     friendId: user.id,
                 },
             });
-            console.log(6);
         }
         const allRequests = await prisma.friendRequest.findMany({
             where: {
                 userId: user.id,
+                sender: false,
             },
         });
-        res.status(201).json(allRequests);
+        const authors = await prisma.user.findMany();
+        const myRequests = allRequests.map((requests) => {
+            const { name, profilePhoto } = authors.find((author) => author.id === requests.friendId);
+            return Object.assign(Object.assign({}, requests), { name, profilePhoto });
+        });
+        res.status(201).json(myRequests);
     }
     catch (error) {
-        console.log(error.message);
         res.status(400).json({ message: error.message });
     }
 };
@@ -323,6 +347,15 @@ export const FriendsPosts = async (req, res) => {
             };
         }));
         res.status(201).json(myFriends);
+    }
+    catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+};
+export const UserFriends = async (req, res) => {
+    try {
+        const users = await prisma.user.findMany();
+        res.status(201).json(users);
     }
     catch (error) {
         res.status(409).json({ message: error.message });

@@ -3,6 +3,7 @@ import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import {QueryState} from "../post/postSlice";
 import userService from "./userService";
 import {Post} from "../app/AppSlice";
+import {User} from "../auth/authSlice";
 
 interface FriendRequest {
   id: string;
@@ -23,16 +24,25 @@ interface initialTypes {
   sentFriendRequests: FriendRequest[];
   friendsPosts: FriendsPosts[];
   sendRequestState: QueryState;
+  verifyFriendsState: QueryState;
   friendsState: QueryState;
   sentRequests: QueryState;
+  getAllUsersState: QueryState;
   message: string;
+  Users: User[];
 }
 
 const initialState: initialTypes = {
   friendRequests: [],
   sentFriendRequests: [],
   friendsPosts: [],
+  Users: [],
   friendsState: {
+    isError: false,
+    isSuccess: false,
+    isLoading: false,
+  },
+  verifyFriendsState: {
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -43,6 +53,11 @@ const initialState: initialTypes = {
     isLoading: false,
   },
   sentRequests: {
+    isError: false,
+    isSuccess: false,
+    isLoading: false,
+  },
+  getAllUsersState: {
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -131,18 +146,47 @@ export const acceptFriendRequest: any = createAsyncThunk(
     }
   }
 );
+export const getAllUsers: any = createAsyncThunk(
+  "get/all",
+  async (_, thunkAPI) => {
+    try {
+      return userService.GetAllUsers();
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const friendSlice = createSlice({
   name: "friends",
   initialState,
   reducers: {
     reset: (state) => {
-      (state.friendsState = {
+      state.friendsState = {
         isError: false,
         isSuccess: false,
         isLoading: false,
-      }),
-        (state.message = "");
+      };
+    },
+    resetSendRequestState: (state) => {
+      state.sendRequestState = {
+        isError: false,
+        isSuccess: false,
+        isLoading: false,
+      };
+    },
+    resetVerifyFriendsState: (state) => {
+      state.verifyFriendsState = {
+        isError: false,
+        isSuccess: false,
+        isLoading: false,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -204,20 +248,35 @@ export const friendSlice = createSlice({
       });
     builder
       .addCase(acceptFriendRequest.pending, (state) => {
-        state.friendsState.isLoading = true;
+        state.verifyFriendsState.isLoading = true;
       })
       .addCase(acceptFriendRequest.fulfilled, (state, {payload}) => {
-        state.friendsState.isLoading = false;
-        state.friendsState.isSuccess = true;
+        state.verifyFriendsState.isLoading = false;
+        state.verifyFriendsState.isSuccess = true;
         state.friendRequests = payload;
       })
       .addCase(acceptFriendRequest.rejected, (state, {payload}) => {
-        state.friendsState.isLoading = false;
-        state.friendsState.isError = true;
+        state.verifyFriendsState.isLoading = false;
+        state.verifyFriendsState.isError = true;
+        state.message = payload;
+      });
+    builder
+      .addCase(getAllUsers.pending, (state) => {
+        state.getAllUsersState.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, {payload}) => {
+        state.getAllUsersState.isLoading = false;
+        state.getAllUsersState.isSuccess = true;
+        state.Users = payload;
+      })
+      .addCase(getAllUsers.rejected, (state, {payload}) => {
+        state.getAllUsersState.isLoading = false;
+        state.getAllUsersState.isError = true;
         state.message = payload;
       });
   },
 });
 
-export const {reset} = friendSlice.actions;
+export const {reset, resetSendRequestState, resetVerifyFriendsState} =
+  friendSlice.actions;
 export default friendSlice.reducer;

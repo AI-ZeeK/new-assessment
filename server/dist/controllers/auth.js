@@ -34,3 +34,25 @@ export const login = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+export const updateBio = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { bio } = req.body;
+        const user = await prisma.user.findUnique({ where: { id } });
+        if (!user)
+            return res.status(400).json({ message: "User doesn't exist" });
+        const newUser = await prisma.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                bio,
+            },
+        });
+        newUser.password === "You will never get it";
+        res.status(200).json(newUser);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

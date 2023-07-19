@@ -9,7 +9,7 @@ const user =
     ? JSON.parse(localStorage.getItem("access-user") as string)
     : null;
 
-interface User {
+export interface User {
   id: string;
   username?: string;
   name: string;
@@ -110,6 +110,24 @@ export const updateProfilePhoto: any = createAsyncThunk(
     }
   }
 );
+
+export const updateBio: any = createAsyncThunk(
+  "bio/put",
+  async ([id, bio]: any, thunkAPI) => {
+    try {
+      return await authService.updateBio(id, bio);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getUser: any = createAsyncThunk(
   "User/get",
   async (id: any, thunkAPI) => {
@@ -126,6 +144,7 @@ export const getUser: any = createAsyncThunk(
     }
   }
 );
+
 export const getMyUser: any = createAsyncThunk(
   "MyUser/get",
   async (id: any, thunkAPI) => {
@@ -142,6 +161,7 @@ export const getMyUser: any = createAsyncThunk(
     }
   }
 );
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -187,6 +207,21 @@ export const authSlice = createSlice({
         state.user = payload;
       })
       .addCase(updateProfilePhoto.rejected, (state, {payload}) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = payload;
+      });
+    builder
+      .addCase(updateBio.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBio.fulfilled, (state, {payload}) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = payload;
+        console.log(payload);
+      })
+      .addCase(updateBio.rejected, (state, {payload}) => {
         state.isLoading = false;
         state.isError = true;
         state.message = payload;

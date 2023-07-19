@@ -1,16 +1,11 @@
-import {AiOutlineUserAdd, AiTwotoneLike} from "react-icons/ai";
-import {BiHomeAlt2} from "react-icons/bi";
-import {FaUserPlus, FaUsers} from "react-icons/fa";
-import {
-  HiHome,
-  HiOutlineHome,
-  HiOutlineUserGroup,
-  HiOutlineUsers,
-} from "react-icons/hi";
+import {BiSolidUserAccount} from "react-icons/bi";
+import {PiUserListFill} from "react-icons/pi";
+import {FaUserPlus} from "react-icons/fa";
+import {HiHome} from "react-icons/hi";
 
 export interface NavTypes {
   id: string;
-  icon: JSX.Element;
+  icon: string;
   head: string;
   state: boolean;
   link: string;
@@ -19,37 +14,43 @@ export const navData: NavTypes[] = [
   {
     id: "UIA80SAP",
     head: "Home",
-    icon: <HiHome className="icon" />,
-    state: false,
+    icon: "HiHome",
+    state: true,
     link: "/",
   },
   {
     id: "UIA80ZXP",
     head: "Friend Requests",
-    icon: <FaUserPlus className="icon" />,
+    icon: "FaUserPlus",
     state: false,
     link: "/friendrequests",
   },
   {
     id: "UIA80POA",
-    head: "Friends",
-    icon: <FaUsers className="icon" />,
+    head: "Friends Post",
+    icon: "BiSolidUserAccount",
     state: false,
     link: "/friends",
   },
   {
     id: "UIA81UAI",
-    head: "Liked Posts",
-    icon: <AiTwotoneLike className="icon" />,
+    head: "Users",
+    icon: "PiUserListFill",
     state: false,
-    link: "/likedposts",
+    link: "/users",
   },
 ];
 
 export const getIconComponent = (iconName: string) => {
   switch (iconName) {
-    case "RiDashboardFill":
-    // return <RiDashboardFill fontSize={18} />;
+    case "HiHome":
+      return <HiHome className="icon" />;
+    case "FaUserPlus":
+      return <FaUserPlus className="icon" />;
+    case "BiSolidUserAccount":
+      return <BiSolidUserAccount className="icon" />;
+    case "PiUserListFill":
+      return <PiUserListFill className="icon" />;
 
     default:
       return null;

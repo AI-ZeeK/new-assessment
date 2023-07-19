@@ -5,16 +5,23 @@ import {
   acceptFriendRequest,
   getFriendRequests,
   getSentFriendRequests,
+  reset,
+  resetVerifyFriendsState,
 } from "../features/user/userSlice";
 import FriendRequestSkeleton from "../components/FriendRequestSkeleton";
-import {AiOutlineFieldTime} from "react-icons/ai";
+import {AiOutlineFieldTime, AiOutlinePlus} from "react-icons/ai";
 import {
   closeModal,
   closeModal2,
   closeModal3,
   closeModal4,
   closeDeleteModal,
+  setModalOpen,
 } from "../features/app/AppSlice";
+import {toast} from "react-toastify";
+import Modal, {DeleteModal} from "../components/Modal";
+import PostModal from "../components/PostModal";
+import ImageModal from "../components/PostModal";
 
 type Props = {};
 
@@ -22,8 +29,13 @@ const FriendRequest = (props: Props) => {
   const {user} = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
-  const {friendRequests, friendsState, sentRequests, sentFriendRequests} =
-    useSelector((state: RootState) => state.friend);
+  const {
+    friendRequests,
+    verifyFriendsState,
+    message,
+    sentRequests,
+    sentFriendRequests,
+  } = useSelector((state: RootState) => state.friend);
   useEffect(() => {
     dispatch(getFriendRequests(user?.id));
     dispatch(getSentFriendRequests(user?.id));
@@ -33,6 +45,22 @@ const FriendRequest = (props: Props) => {
     dispatch(closeModal4());
     dispatch(closeDeleteModal());
   }, []);
+  useEffect(() => {
+    if (verifyFriendsState.isError) {
+      toast.error(message);
+    }
+    if (verifyFriendsState.isSuccess) {
+      toast.success("Request verified");
+      dispatch(getFriendRequests(user?.id));
+      dispatch(getSentFriendRequests(user?.id));
+    }
+
+    dispatch(resetVerifyFriendsState());
+  }, [
+    verifyFriendsState.isError,
+    verifyFriendsState.isLoading,
+    verifyFriendsState.isSuccess,
+  ]);
   return (
     <div className="requests-section">
       <div className="friend-requests">
@@ -70,7 +98,7 @@ const FriendRequest = (props: Props) => {
               </div>
             </div>
           ))
-        ) : friendsState.isLoading ? (
+        ) : verifyFriendsState.isLoading ? (
           <>
             {[1, 2].map((_, index) => (
               <FriendRequestSkeleton key={index} />

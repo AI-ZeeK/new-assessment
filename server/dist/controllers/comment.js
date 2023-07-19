@@ -37,7 +37,6 @@ export const updatedComment = async (req, res) => {
     try {
         const { id } = req.params;
         const { comment } = req.body;
-        console.log(comment);
         const isComment = await prisma.comments.findUnique({
             where: { id },
         });

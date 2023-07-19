@@ -2,9 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {CiEdit} from "react-icons/ci";
 import {MdDelete, MdDeleteForever} from "react-icons/md";
-import {IoClose} from "react-icons/io5";
+import {GoVerified} from "react-icons/go";
 import {
   AiFillLike,
+  AiOutlineFieldTime,
   AiOutlineUserAdd,
   AiOutlineUserDelete,
 } from "react-icons/ai";
@@ -25,15 +26,19 @@ import {
 } from "../features/app/AppSlice";
 import moments from "moments";
 import {BsThreeDots} from "react-icons/bs";
-import {getFriendPosts, sendFriendRequest} from "../features/user/userSlice";
+import {
+  getFriendPosts,
+  getFriendRequests,
+  getSentFriendRequests,
+  sendFriendRequest,
+} from "../features/user/userSlice";
 // const postMadeAt = moments();
 
-const GoalItem = ({post, comments, isLoading}: any) => {
+const PostItem = ({post, comments, isLoading}: any) => {
   const dispatch = useDispatch();
   const optionsRef: any = useRef(null);
-  const {friendsPosts, friendsState} = useSelector(
-    (state: RootState) => state.friend
-  );
+  const {friendsPosts, friendsState, friendRequests, sentFriendRequests} =
+    useSelector((state: RootState) => state.friend);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentLength, setCommentLength] = useState<number>(0);
   const [openOptions, setOpenOptions] = useState(false);
@@ -64,6 +69,12 @@ const GoalItem = ({post, comments, isLoading}: any) => {
   });
   const isFriend = friendsPosts.filter((isfriend: any) => {
     return isfriend.id === post.authorId;
+  });
+  const isSentFriendRequest = sentFriendRequests.filter((isfriend: any) => {
+    return isfriend.friendId === post.authorId && isfriend.userId === user?.id;
+  });
+  const isFriendRequest = friendRequests.filter((isfriend: any) => {
+    return isfriend.friendId === post.authorId && isfriend.userId === user?.id;
   });
 
   const handleSeeMore = async (postId: string) => {
@@ -97,6 +108,8 @@ const GoalItem = ({post, comments, isLoading}: any) => {
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
+    dispatch(getSentFriendRequests(user?.id));
+    dispatch(getFriendRequests(user?.id));
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -133,16 +146,7 @@ const GoalItem = ({post, comments, isLoading}: any) => {
             <ul className={`options-list ${openOptions ? "active" : ""}`}>
               {user?.id !== post.authorId && (
                 <>
-                  {!isFriend.length ? (
-                    <li
-                      onClick={() =>
-                        dispatch(sendFriendRequest([post.authorId, user?.id]))
-                      }
-                    >
-                      <AiOutlineUserAdd className="icon" />{" "}
-                      <span>Add Friend</span>
-                    </li>
-                  ) : (
+                  {Boolean(isFriend.length) ? (
                     <li
                       onClick={() =>
                         dispatch(sendFriendRequest([post.authorId, user?.id]))
@@ -150,6 +154,31 @@ const GoalItem = ({post, comments, isLoading}: any) => {
                     >
                       <AiOutlineUserDelete className="icon" />{" "}
                       <span>Unfriend</span>
+                    </li>
+                  ) : Boolean(isSentFriendRequest.length) ? (
+                    <li style={{background: "#00000088", color: "#ffffff"}}>
+                      <AiOutlineFieldTime fontSize={24} />
+                      <span>Pending</span>
+                    </li>
+                  ) : Boolean(isFriendRequest.length) ? (
+                    <>
+                      <li
+                        onClick={() => {
+                          navigate("/friendrequests");
+                        }}
+                      >
+                        <GoVerified className="icon" />{" "}
+                        <span>Verify Request</span>
+                      </li>
+                    </>
+                  ) : (
+                    <li
+                      onClick={() =>
+                        dispatch(sendFriendRequest([post.authorId, user?.id]))
+                      }
+                    >
+                      <AiOutlineUserAdd className="icon" />{" "}
+                      <span>Add Friend</span>
                     </li>
                   )}
                 </>
@@ -293,4 +322,4 @@ const GoalItem = ({post, comments, isLoading}: any) => {
   );
 };
 
-export default GoalItem;
+export default PostItem;

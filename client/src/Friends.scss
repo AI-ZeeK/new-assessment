@@ -68,6 +68,16 @@
       }
     }
   }
+  .friend-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    border: 1px solid grey;
+    padding: 0.4rem 0.6rem;
+  }
 }
 
 .friends-posts-section {
