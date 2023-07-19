@@ -179,7 +179,7 @@ const Profile = ({mine}: Props) => {
           </div>
         ) : (
           <div className="goals">
-            <h4>You have no Djengs, Yet!!</h4>
+            <h4>{mine ? "You" : myUser.name} no Djengs, Yet!!</h4>
           </div>
         )}
       </section>
