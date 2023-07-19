@@ -26,7 +26,6 @@ import {getFriendPosts} from "../features/user/userSlice";
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
   const {user} = useSelector((state: RootState) => state.auth);
   const {modal2Img, deletePostId} = useSelector(
     (state: RootState) => state.app
@@ -61,15 +60,6 @@ const Dashboard = () => {
     dispatch(getComments());
   }, [sentFriendRequests]);
   useEffect(() => {
-    const userData =
-      localStorage.getItem("access-user") !== null
-        ? JSON.parse(localStorage.getItem("access-user") as string)
-        : null;
-
-    if (user && userData && location.pathname === "/auth") {
-      navigate("/");
-    }
-
     dispatch(getFriendPosts(user?.id));
     dispatch(closeModal());
     dispatch(closeModal2());
