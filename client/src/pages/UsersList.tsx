@@ -38,6 +38,7 @@ const UsersList = (props: Props) => {
   const [isSend, setIsSend] = useState(false);
 
   useEffect(() => {
+    dispatch(getAllUsers());
     dispatch(closeModal());
     dispatch(closeModal2());
     dispatch(closeModal3());
@@ -52,7 +53,6 @@ const UsersList = (props: Props) => {
       isSend
         ? toast.success("Request Sent")
         : toast.success("Unfriend Successful");
-      dispatch(getAllUsers());
       if (user) {
         dispatch(getFriendRequests(user.id));
         dispatch(getSentFriendRequests(user.id));

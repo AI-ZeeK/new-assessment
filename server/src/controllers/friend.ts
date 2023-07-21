@@ -332,12 +332,14 @@ export const sentFriendRequests: ReqRes = async (req, res) => {
       return res.status(201).json(isMyFriendRequests);
     }
     const authors = await prisma.user.findMany();
-    const myRequests = isMyFriendRequests.map((requests) => {
-      const {name, profilePhoto}: any = authors.find(
-        (author) => author.id === requests.friendId
-      );
-      return {...requests, name, profilePhoto};
-    });
+    const myRequests = await Promise.all(
+      isMyFriendRequests.map((requests) => {
+        const {name, profilePhoto}: any = authors.find(
+          (author) => author.id === requests.friendId
+        );
+        return {...requests, name, profilePhoto};
+      })
+    );
 
     res.status(201).json(myRequests);
   } catch (error: any) {

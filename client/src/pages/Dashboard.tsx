@@ -38,6 +38,10 @@ const Dashboard = () => {
   const {comments} = useSelector((state: RootState) => state.comment);
 
   useEffect(() => {
+    dispatch(getTwits());
+    dispatch(getComments());
+  }, []);
+  useEffect(() => {
     if (isError) {
       console.log(messages);
     }
@@ -52,10 +56,7 @@ const Dashboard = () => {
     };
   }, [user, navigate, isError, messages, dispatch]);
   console.log(posts);
-  useEffect(() => {
-    dispatch(getTwits());
-    dispatch(getComments());
-  }, []);
+
   useEffect(() => {
     dispatch(getFriendPosts(user?.id));
     dispatch(closeModal());
@@ -89,7 +90,7 @@ const Dashboard = () => {
                 <PostItem key={post.id} post={post} comments={comments} />
               ))}
           </div>
-        ) : appState.isLoading ? (
+        ) : (
           <>
             <div className="goals">
               {[1, 2, 3].map((_, index) => (
@@ -97,8 +98,6 @@ const Dashboard = () => {
               ))}
             </div>
           </>
-        ) : (
-          <div className="goals">No Djengs</div>
         )}
       </section>
 

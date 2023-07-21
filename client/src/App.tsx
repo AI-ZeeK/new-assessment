@@ -18,6 +18,7 @@ import UsersList from "./pages/UsersList";
 import F04 from "./pages/404";
 import {getTwits} from "./features/post/postSlice";
 import {getAllUsers} from "./features/user/userSlice";
+import {getComments} from "./features/comment/commentSlice";
 
 function App() {
   const dispatch = useDispatch();
