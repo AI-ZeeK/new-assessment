@@ -94,16 +94,18 @@ export const deletePost = async (req, res) => {
         if (post.authorId !== userId) {
             return res.status(403).json({ message: "Forbidden" });
         }
-        await prisma.post.delete({
-            where: {
-                id,
-            },
-        });
-        await prisma.comments.deleteMany({
-            where: {
-                postId: id,
-            },
-        });
+        await Promise.all([
+            prisma.post.delete({
+                where: {
+                    id,
+                },
+            }),
+            prisma.comments.deleteMany({
+                where: {
+                    postId: id,
+                },
+            }),
+        ]);
         const updatedPosts = await PostAuthors();
         return res.status(200).json(updatedPosts);
     }
@@ -179,9 +181,11 @@ export const Like = async (req, res) => {
     }
 };
 const PostAuthors = async () => {
-    const authors = await prisma.user.findMany();
-    const posts = await prisma.post.findMany();
-    const updatedPosts = await Promise.all(posts.map((post, index) => {
+    const [authors, posts] = await Promise.all([
+        prisma.user.findMany(),
+        prisma.post.findMany(),
+    ]);
+    const updatedPosts = await Promise.all(posts.map((post) => {
         const { name, profilePhoto, id } = authors.find((author) => author.id === post.authorId);
         return Object.assign(Object.assign({ name, profilePhoto }, post), { userId: id });
     }));

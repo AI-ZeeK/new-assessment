@@ -22,6 +22,7 @@ import {toast} from "react-toastify";
 import Modal, {DeleteModal} from "../components/Modal";
 import PostModal from "../components/PostModal";
 import ImageModal from "../components/PostModal";
+import Spinner from "../components/Spinner";
 
 type Props = {};
 
@@ -51,8 +52,10 @@ const FriendRequest = (props: Props) => {
     }
     if (verifyFriendsState.isSuccess) {
       toast.success("Request verified");
-      dispatch(getFriendRequests(user?.id));
-      dispatch(getSentFriendRequests(user?.id));
+      if (user) {
+        dispatch(getFriendRequests(user.id));
+        dispatch(getSentFriendRequests(user.id));
+      }
     }
 
     dispatch(resetVerifyFriendsState());
@@ -63,6 +66,8 @@ const FriendRequest = (props: Props) => {
   ]);
   return (
     <div className="requests-section">
+      {verifyFriendsState.isLoading && <Spinner />}
+
       <div className="friend-requests">
         <h3>Friend Requests</h3>
         {friendRequests.length > 0 ? (

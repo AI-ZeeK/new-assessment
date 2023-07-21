@@ -110,16 +110,18 @@ export const deletePost: ReqRes = async (req: any, res) => {
       return res.status(403).json({message: "Forbidden"});
     }
 
-    await prisma.post.delete({
-      where: {
-        id,
-      },
-    });
-    await prisma.comments.deleteMany({
-      where: {
-        postId: id,
-      },
-    });
+    await Promise.all([
+      prisma.post.delete({
+        where: {
+          id,
+        },
+      }),
+      prisma.comments.deleteMany({
+        where: {
+          postId: id,
+        },
+      }),
+    ]);
 
     const updatedPosts = await PostAuthors();
 
@@ -196,10 +198,13 @@ export const Like: ReqRes = async (req, res) => {
 };
 
 const PostAuthors = async () => {
-  const authors = await prisma.user.findMany();
-  const posts = await prisma.post.findMany();
+  const [authors, posts] = await Promise.all([
+    prisma.user.findMany(),
+    prisma.post.findMany(),
+  ]);
+
   const updatedPosts = await Promise.all(
-    posts.map((post, index) => {
+    posts.map((post) => {
       const {name, profilePhoto, id}: any = authors.find(
         (author) => author.id === post.authorId
       );

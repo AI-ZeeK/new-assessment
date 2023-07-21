@@ -6,7 +6,6 @@ import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
 import commentRoutes from "./routes/comment.js";
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit";
 import redis from "redis";
 import { PrismaClient } from "@prisma/client";
 import friendsRoutes from "./routes/friends.js";
@@ -17,10 +16,6 @@ export const redisClient = redis.createClient();
 const color = colors;
 dotenv.config();
 const app = express();
-const limiter = rateLimit({
-    windowMs: 10 * 1000,
-    max: 100, // maximum requests allowed per windowMs
-});
 // Middleware
 app.use(cookieParser());
 app.use(cors());
@@ -29,7 +24,6 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (req, res) => {
     res.send("Deployed successfully");
 });
-app.use("/api/post/users/:authorId", limiter);
 app.use("/api", authRoutes);
 app.use("/api", postRoutes);
 app.use("/api", commentRoutes);

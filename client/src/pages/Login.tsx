@@ -27,10 +27,9 @@ const Login = () => {
     }
     if (isSuccess) {
       navigate("/");
+      dispatch(reset());
     }
-
-    dispatch(reset());
-  }, [isError, isLoading, isSuccess, message]);
+  }, [isError, isSuccess]);
 
   const onChange = (e: any) => {
     setFormData((prevState) => ({

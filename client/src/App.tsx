@@ -16,6 +16,8 @@ import FriendsPosts from "./pages/FriendsPosts";
 import {RootState} from "./app/store";
 import UsersList from "./pages/UsersList";
 import F04 from "./pages/404";
+import {getTwits} from "./features/post/postSlice";
+import {getAllUsers} from "./features/user/userSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,13 +32,17 @@ function App() {
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
 
-    if (user && userData && location.pathname === "/auth") {
+    if (user && location.pathname === "/auth") {
       navigate("/");
     }
-    if (!userData && !user) {
+    if (userData) {
+      dispatch(getUser(userData.id));
+    }
+    if (!user) {
       navigate("/auth");
     }
   });
+
   useEffect(() => {
     const userData =
       localStorage.getItem("access-user") !== null
@@ -45,8 +51,7 @@ function App() {
     if (userData) {
       dispatch(getUser(userData.id));
     }
-  }, []);
-  if (user && location.pathname === "/auth") navigate("/");
+  }, [user]);
 
   return (
     <>

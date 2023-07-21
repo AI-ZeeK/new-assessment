@@ -52,11 +52,13 @@ const UsersList = (props: Props) => {
       isSend
         ? toast.success("Request Sent")
         : toast.success("Unfriend Successful");
-      dispatch(getFriendRequests(user?.id));
-      dispatch(getSentFriendRequests(user?.id));
       dispatch(getAllUsers());
+      if (user) {
+        dispatch(getFriendRequests(user.id));
+        dispatch(getSentFriendRequests(user.id));
+      }
+      dispatch(resetSendRequestState());
     }
-    dispatch(resetSendRequestState());
   }, [
     sendRequestState.isError,
     sendRequestState.isLoading,
@@ -64,9 +66,10 @@ const UsersList = (props: Props) => {
   ]);
 
   useEffect(() => {
-    dispatch(getAllUsers());
-    dispatch(getFriendRequests(user?.id));
-    dispatch(getSentFriendRequests(user?.id));
+    if (user) {
+      dispatch(getFriendRequests(user.id));
+      dispatch(getSentFriendRequests(user.id));
+    }
   }, []);
 
   return (

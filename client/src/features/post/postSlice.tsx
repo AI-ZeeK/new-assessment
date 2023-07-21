@@ -10,6 +10,7 @@ interface initialTypes {
   isSuccess: boolean;
   isLoading: boolean;
   postState: QueryState;
+  appState: QueryState;
   getDjengsState: QueryState;
   djengState: QueryState;
   deleteDjengState: QueryState;
@@ -37,6 +38,11 @@ const initialState: initialTypes = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  appState: {
+    isError: false,
+    isSuccess: false,
+    isLoading: false,
+  },
   postState: {
     isError: false,
     isSuccess: false,
@@ -193,17 +199,22 @@ export const TwitSlice = createSlice({
       });
     builder
       .addCase(getTwits.pending, (state) => {
-        state.isLoading = true;
+        console.log("pending");
+
+        state.appState.isLoading = true;
       })
       .addCase(getTwits.fulfilled, (state, {payload}) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        console.log("fulfilled", payload);
+        state.appState.isLoading = false;
+        state.appState.isSuccess = true;
         state.posts = payload;
       })
-      .addCase(getTwits.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.messages = action.payload;
+      .addCase(getTwits.rejected, (state, {payload}) => {
+        console.log("rehected", payload);
+
+        state.appState.isLoading = false;
+        state.appState.isError = true;
+        state.messages = payload;
       });
     builder
       .addCase(getMyDjengs.pending, (state) => {

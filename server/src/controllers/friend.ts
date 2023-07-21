@@ -188,18 +188,20 @@ export const AcceptFriendRequest: ReqRes = async (req, res) => {
     });
     if (!friend) return res.status(400).json({message: "Friend doesn't exist"});
     if (!requestState) {
-      await prisma.friendRequest.deleteMany({
-        where: {
-          userId: user.id,
-          friendId: friend.id,
-        },
-      });
-      await prisma.friendRequest.deleteMany({
-        where: {
-          userId: friend.id,
-          friendId: user.id,
-        },
-      });
+      await Promise.all([
+        prisma.friendRequest.deleteMany({
+          where: {
+            userId: user.id,
+            friendId: friend.id,
+          },
+        }),
+        prisma.friendRequest.deleteMany({
+          where: {
+            userId: friend.id,
+            friendId: user.id,
+          },
+        }),
+      ]);
     }
     if (requestState) {
       const isUserFriend = user.friends.filter((friendId) => {
@@ -231,27 +233,31 @@ export const AcceptFriendRequest: ReqRes = async (req, res) => {
           },
         });
       }
-      await prisma.friendRequest.deleteMany({
+      await Promise.all([
+        prisma.friendRequest.deleteMany({
+          where: {
+            userId: user.id,
+            friendId: friend.id,
+          },
+        }),
+        prisma.friendRequest.deleteMany({
+          where: {
+            userId: friend.id,
+            friendId: user.id,
+          },
+        }),
+      ]);
+    }
+
+    const [allRequests, authors] = await Promise.all([
+      prisma.friendRequest.findMany({
         where: {
           userId: user.id,
-          friendId: friend.id,
+          sender: false,
         },
-      });
-      await prisma.friendRequest.deleteMany({
-        where: {
-          userId: friend.id,
-          friendId: user.id,
-        },
-      });
-    }
-    const allRequests = await prisma.friendRequest.findMany({
-      where: {
-        userId: user.id,
-        sender: false,
-      },
-    });
-
-    const authors = await prisma.user.findMany();
+      }),
+      prisma.user.findMany(),
+    ]);
     const myRequests = allRequests.map((requests) => {
       const {name, profilePhoto}: any = authors.find(
         (author) => author.id === requests.friendId

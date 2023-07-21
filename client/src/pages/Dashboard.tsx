@@ -30,7 +30,7 @@ const Dashboard = () => {
   const {modal2Img, deletePostId} = useSelector(
     (state: RootState) => state.app
   );
-  const {posts, isLoading, isError, messages} = useSelector(
+  const {posts, isLoading, isError, messages, appState} = useSelector(
     (state: RootState) => state.posts
   );
 
@@ -51,14 +51,11 @@ const Dashboard = () => {
       dispatch(reset());
     };
   }, [user, navigate, isError, messages, dispatch]);
+  console.log(posts);
   useEffect(() => {
-    const user =
-      localStorage.getItem("access-user") !== null
-        ? JSON.parse(localStorage.getItem("access-user ") as string)
-        : null;
     dispatch(getTwits());
     dispatch(getComments());
-  }, [sentFriendRequests]);
+  }, []);
   useEffect(() => {
     dispatch(getFriendPosts(user?.id));
     dispatch(closeModal());
@@ -92,12 +89,16 @@ const Dashboard = () => {
                 <PostItem key={post.id} post={post} comments={comments} />
               ))}
           </div>
+        ) : appState.isLoading ? (
+          <>
+            <div className="goals">
+              {[1, 2, 3].map((_, index) => (
+                <PostItemSkeleton key={index} />
+              ))}
+            </div>
+          </>
         ) : (
-          <div className="goals">
-            {[1, 2, 3].map((_, index) => (
-              <PostItemSkeleton key={index} />
-            ))}
-          </div>
+          <div className="goals">No Djengs</div>
         )}
       </section>
 
