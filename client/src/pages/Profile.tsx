@@ -64,7 +64,7 @@ const Profile = ({mine}: Props) => {
     dispatch(openModal4());
   };
   const handleOpenModal2 = (profilePhoto: any) => {
-    dispatch(openModal2(profilePhoto));
+    profilePhoto && dispatch(openModal2(profilePhoto));
   };
 
   useEffect(() => {

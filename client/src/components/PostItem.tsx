@@ -116,7 +116,6 @@ const PostItem = ({post, comments, isLoading}: any) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  console.log(baseUrl);
   return (
     <>
       <div className="goal">

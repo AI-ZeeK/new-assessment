@@ -16,7 +16,6 @@ API.interceptors.request.use((req) => {
 });
 
 const createTwit = async (image: string, content: string, authorId: string) => {
-  console.log(image, content, authorId);
   const res = await API.post(
     API_URL,
     {
@@ -30,7 +29,6 @@ const createTwit = async (image: string, content: string, authorId: string) => {
       },
     }
   );
-  console.log(res);
   return res.data;
 };
 const likePost = async (postId: string, userId: string) => {
@@ -40,7 +38,6 @@ const likePost = async (postId: string, userId: string) => {
 
 //  Get user Twits
 const getTwits = async () => {
-  console.log(123);
   const {data} = await API.get(API_URL);
 
   return data;

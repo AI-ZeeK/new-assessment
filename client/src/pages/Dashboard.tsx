@@ -45,15 +45,13 @@ const Dashboard = () => {
     if (!isCanSend) {
       dispatch(getTwits());
       setIsCanSend(true);
-      console.log(456);
     }
     if (isCanSend) {
       setTimeout(() => {
         setIsCanSend(false);
-        console.log(789);
       }, 10000);
     }
-  }, []);
+  }, [isCanSend]);
   useEffect(() => {
     if (isError) {
       console.log(messages);
