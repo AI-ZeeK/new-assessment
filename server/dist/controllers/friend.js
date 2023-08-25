@@ -360,11 +360,9 @@ export const FriendsPosts = async (req, res) => {
 };
 export const UserFriends = async (req, res) => {
     try {
-        console.log(1);
         const users = await prisma.user.findMany();
-        console.log(2);
         const newUsers = users.map((user) => {
-            return Object.assign(Object.assign({}, user), { profilePhoto: null });
+            return Object.assign({}, user);
         });
         res.status(201).json(newUsers);
     }

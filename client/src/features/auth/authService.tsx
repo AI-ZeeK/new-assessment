@@ -17,7 +17,6 @@ API.interceptors.request.use((req) => {
 });
 // Login User
 const login = async (userData: any) => {
-  console.log(123456);
   const {data} = await API.post(API_URL, userData);
   if (data) {
     localStorage.setItem(
