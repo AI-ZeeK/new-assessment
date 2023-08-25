@@ -509,10 +509,10 @@ export const AddProfilePictureModal = (props: Props) => {
 export const AddBioModal = (props: Props) => {
   const modalRef: any = useRef(null);
   const modalOverlayRef: any = useRef(null);
-  const [bio, setBio] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {user} = useSelector((state: any) => state.auth);
+  const {user} = useSelector((state: RootState) => state.auth);
+  const [bio, setBio] = useState(user?.bio);
   const {isBioUpdateModalOpen} = useSelector((state: RootState) => state.app);
 
   const onSubmit = (e: any) => {
@@ -590,7 +590,7 @@ export const AddBioModal = (props: Props) => {
               ></textarea>
             </div>
             <div className="content-length">
-              <span>{bio.length}/104</span>
+              <span>{bio?.length}/104</span>
             </div>
 
             <div className="form-block">

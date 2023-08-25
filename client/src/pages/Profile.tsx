@@ -19,6 +19,7 @@ import {
   closeModal3,
   closeModal4,
   openBioUpdateModal,
+  openModal2,
   openModal4,
   setModalOpen,
 } from "../features/app/AppSlice";
@@ -58,9 +59,14 @@ const Profile = ({mine}: Props) => {
     dispatch(resetUser());
     dispatch(reset());
   };
+
   const handleOpenAddPictureModal = () => {
     dispatch(openModal4());
   };
+  const handleOpenModal2 = (profilePhoto: any) => {
+    dispatch(openModal2(profilePhoto));
+  };
+
   useEffect(() => {
     mine ? dispatch(getMyUser(user?.id)) : dispatch(getMyUser(postId));
   }, [postId, myUser, userPosts, user]);
@@ -86,7 +92,12 @@ const Profile = ({mine}: Props) => {
               <HiOutlineCamera />{" "}
             </div>
           )}
-          <div className="profile-img">
+          <div
+            className="profile-img"
+            onClick={() =>
+              handleOpenModal2(mine ? user?.profilePhoto : myUser.profilePhoto)
+            }
+          >
             {user?.profilePhoto ? (
               <img
                 src={
