@@ -33,6 +33,7 @@ import PostItemSkeleton from "../components/PostItemSkeleton";
 import Modal, {DeleteModal} from "../components/Modal";
 import Spinner from "../components/Spinner";
 import {AiFillFileAdd, AiOutlinePlus} from "react-icons/ai";
+import {baseUrl} from "../constants/constants";
 
 type Props = {
   mine: boolean;
@@ -62,10 +63,10 @@ const Profile = ({mine}: Props) => {
   };
   useEffect(() => {
     mine ? dispatch(getMyUser(user?.id)) : dispatch(getMyUser(postId));
-  }, [postId, myUser, userPosts]);
+  }, [postId, myUser, userPosts, user]);
   useEffect(() => {
     mine ? dispatch(getMyDjengs(user?.id)) : dispatch(getMyDjengs(postId));
-  }, [postId]);
+  }, [postId, user, myUser]);
   useEffect(() => {
     dispatch(closeModal());
     dispatch(closeModal2());
@@ -88,7 +89,11 @@ const Profile = ({mine}: Props) => {
           <div className="profile-img">
             {user?.profilePhoto ? (
               <img
-                src={mine ? user?.profilePhoto : myUser?.profilePhoto}
+                src={
+                  mine
+                    ? `${baseUrl}/${user.profilePhoto}`
+                    : `${baseUrl}/${myUser.profilePhoto}`
+                }
                 alt=""
               />
             ) : (

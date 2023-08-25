@@ -32,13 +32,18 @@ function App() {
       localStorage.getItem("access-user") !== null
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
+    const usertoken =
+      localStorage.getItem("access-token") !== null
+        ? JSON.parse(localStorage.getItem("access-token") as string)
+        : null;
 
     if (user && location.pathname === "/auth") {
       navigate("/");
     }
-    if (userData) {
-      dispatch(getUser(userData.id));
+    if (userData && usertoken && location.pathname === "/auth") {
+      navigate("/");
     }
+
     if (!user) {
       navigate("/auth");
     }
@@ -49,10 +54,14 @@ function App() {
       localStorage.getItem("access-user") !== null
         ? JSON.parse(localStorage.getItem("access-user") as string)
         : null;
-    if (userData) {
+    const usertoken =
+      localStorage.getItem("access-token") !== null
+        ? JSON.parse(localStorage.getItem("access-token") as string)
+        : null;
+    if (usertoken && userData) {
       dispatch(getUser(userData.id));
     }
-  }, [user]);
+  }, []);
 
   return (
     <>

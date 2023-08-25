@@ -1,7 +1,7 @@
 import axios from "axios";
+import {baseUrl} from "../../constants/constants";
 const API = axios.create({
-  baseURL: `https://newassessment.onrender.com`,
-  //   baseURL: `http://localhost:5000`,
+  baseURL: baseUrl,
 });
 const API_URL = "/api/auth/";
 const USER_API_URL = "/api/user";
@@ -17,6 +17,7 @@ API.interceptors.request.use((req) => {
 });
 // Login User
 const login = async (userData: any) => {
+  console.log(123456);
   const {data} = await API.post(API_URL, userData);
   if (data) {
     localStorage.setItem(
@@ -36,9 +37,18 @@ const logout = () => {
 };
 
 export const updateProfilePhotoApi = async (id: string, profilePhoto: any) => {
-  const {data} = await API.patch(`${USER_API_URL}/profile/${id}`, {
-    profilePhoto,
-  });
+  console.log(profilePhoto);
+  const {data} = await API.patch(
+    `${USER_API_URL}/profile/${id}`,
+    {
+      profilePhoto,
+    },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   if (data) {
     localStorage.setItem("access-user", JSON.stringify(data));
   }

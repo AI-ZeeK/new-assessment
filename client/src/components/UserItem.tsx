@@ -16,6 +16,7 @@ import {
   sendFriendRequest,
 } from "../features/user/userSlice";
 import {toast} from "react-toastify";
+import {baseUrl} from "../constants/constants";
 
 type Props = {
   User: User;
@@ -56,7 +57,7 @@ const UserItem = ({User, setIsSend}: Props) => {
         }
       >
         {User.profilePhoto ? (
-          <img src={User.profilePhoto} alt="" />
+          <img src={`${baseUrl}/${User.profilePhoto}`} alt="" />
         ) : (
           <p>{User.name.slice(0, 1)}</p>
         )}

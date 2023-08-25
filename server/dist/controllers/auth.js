@@ -4,6 +4,8 @@ import { prisma } from "../app.js";
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (!email || !password)
+            return res.status(400).json({ message: "Input invalid" });
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
             const salt = await bcrypt.genSalt();

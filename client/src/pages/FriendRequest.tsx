@@ -23,6 +23,7 @@ import Modal, {DeleteModal} from "../components/Modal";
 import PostModal from "../components/PostModal";
 import ImageModal from "../components/PostModal";
 import Spinner from "../components/Spinner";
+import {baseUrl} from "../constants/constants";
 
 type Props = {};
 
@@ -75,7 +76,7 @@ const FriendRequest = (props: Props) => {
             <div key={request.id} className="friend-request">
               <div className="profile-img">
                 {request.profilePhoto ? (
-                  <img src={request.profilePhoto} alt="" />
+                  <img src={`${baseUrl}/${request.profilePhoto}`} alt="" />
                 ) : (
                   <p>{request.name.slice(0, 1)}</p>
                 )}
@@ -122,7 +123,7 @@ const FriendRequest = (props: Props) => {
             <div key={request.id} className="friend-request">
               <div className="profile-img">
                 {request.profilePhoto ? (
-                  <img src={request.profilePhoto} alt="" />
+                  <img src={`${baseUrl}/${request.profilePhoto}`} alt="" />
                 ) : (
                   <p>{request.name.slice(0, 1)}</p>
                 )}

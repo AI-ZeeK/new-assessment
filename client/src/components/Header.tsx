@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {logout, reset, resetUser} from "../features/auth/authSlice";
 import {useEffect} from "react";
+import {baseUrl} from "../constants/constants";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Header = () => {
             <div className="profile" onClick={() => navigate(`/profile`)}>
               <div className="profile-img">
                 {user.profilePhoto ? (
-                  <img src={user.profilePhoto} alt="" />
+                  <img src={`${baseUrl}/${user.profilePhoto}`} alt="" />
                 ) : (
                   <p>{user.name.slice(0, 1)}</p>
                 )}

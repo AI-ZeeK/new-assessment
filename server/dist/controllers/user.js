@@ -1,8 +1,9 @@
 import { prisma } from "../app.js";
 export const updateProfilePicture = async (req, res) => {
+    var _a;
     try {
         const { id } = req.params;
-        const { profilePhoto } = req.body;
+        const profilePhoto = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
         const user = await prisma.user.findUnique({
             where: {
                 id,

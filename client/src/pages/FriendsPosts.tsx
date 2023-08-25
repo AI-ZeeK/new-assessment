@@ -15,6 +15,7 @@ import {
 import {AiOutlinePlus} from "react-icons/ai";
 import ImageModal, {PostModal} from "../components/PostModal";
 import Modal, {DeleteModal} from "../components/Modal";
+import {baseUrl} from "../constants/constants";
 
 type Props = {};
 
@@ -68,7 +69,7 @@ const FriendsPosts = (props: Props) => {
             >
               <div className="profile-img">
                 {friendPost.profilePhoto ? (
-                  <img src={friendPost.profilePhoto} alt="" />
+                  <img src={`${baseUrl}/${friendPost.profilePhoto}`} alt="" />
                 ) : (
                   <p>{friendPost.name.slice(0, 1)}</p>
                 )}

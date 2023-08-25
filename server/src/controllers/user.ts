@@ -1,11 +1,12 @@
 import {ReqRes} from "../interface.js";
-import {prisma} from "../app.js";
+import {gfs, prisma} from "../app.js";
 import {Prisma} from "@prisma/client";
 
 export const updateProfilePicture: ReqRes = async (req, res) => {
   try {
     const {id} = req.params;
-    const {profilePhoto} = req.body;
+
+    const profilePhoto = req.file?.path;
 
     const user = await prisma.user.findUnique({
       where: {

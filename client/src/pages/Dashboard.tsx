@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import PostForm from "../components/PostForm";
@@ -26,6 +26,7 @@ import {getFriendPosts} from "../features/user/userSlice";
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isCanSend, setIsCanSend] = useState(false);
   const {user} = useSelector((state: RootState) => state.auth);
   const {modal2Img, deletePostId} = useSelector(
     (state: RootState) => state.app
@@ -38,8 +39,20 @@ const Dashboard = () => {
   const {comments} = useSelector((state: RootState) => state.comment);
 
   useEffect(() => {
-    dispatch(getTwits());
     dispatch(getComments());
+  }, []);
+  useEffect(() => {
+    if (!isCanSend) {
+      dispatch(getTwits());
+      setIsCanSend(true);
+      console.log(456);
+    }
+    if (isCanSend) {
+      setTimeout(() => {
+        setIsCanSend(false);
+        console.log(789);
+      }, 10000);
+    }
   }, []);
   useEffect(() => {
     if (isError) {
@@ -54,8 +67,7 @@ const Dashboard = () => {
     return () => {
       dispatch(reset());
     };
-  }, [user, navigate, isError, messages, dispatch]);
-  console.log(posts);
+  }, [user, navigate, isError, messages]);
 
   useEffect(() => {
     dispatch(getFriendPosts(user?.id));

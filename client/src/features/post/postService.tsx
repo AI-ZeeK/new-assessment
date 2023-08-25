@@ -1,7 +1,7 @@
 import axios from "axios";
+import {baseUrl} from "../../constants/constants";
 const API = axios.create({
-  baseURL: `https://newassessment.onrender.com`,
-  //   baseURL: `http://localhost:5000`,
+  baseURL: baseUrl,
 });
 const API_URL = "/api/post";
 
@@ -16,12 +16,22 @@ API.interceptors.request.use((req) => {
 });
 
 const createTwit = async (image: string, content: string, authorId: string) => {
-  const {data} = await API.post(API_URL, {
-    image,
-    content,
-    authorId,
-  });
-  return data;
+  console.log(image, content, authorId);
+  const res = await API.post(
+    API_URL,
+    {
+      image,
+      content,
+      authorId,
+    },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  console.log(res);
+  return res.data;
 };
 const likePost = async (postId: string, userId: string) => {
   const {data} = await API.put(`${API_URL}/${postId}/${userId}`);
@@ -30,6 +40,7 @@ const likePost = async (postId: string, userId: string) => {
 
 //  Get user Twits
 const getTwits = async () => {
+  console.log(123);
   const {data} = await API.get(API_URL);
 
   return data;

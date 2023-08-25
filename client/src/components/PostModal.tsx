@@ -33,6 +33,7 @@ import {MdDelete, MdDeleteForever} from "react-icons/md";
 import {CiEdit} from "react-icons/ci";
 import {GoVerified} from "react-icons/go";
 import {sendFriendRequest} from "../features/user/userSlice";
+import {baseUrl} from "../constants/constants";
 
 type Props = {};
 
@@ -70,7 +71,7 @@ const ImageModal = ({img}: any) => {
       className={`modal-overlay  ${isModal2Open ? "active" : ""}`}
     >
       <div ref={modalRef} className="modal-image">
-        <img src={img} alt="" />
+        <img src={`${baseUrl}/${img}`} alt="" />
       </div>
     </section>
   );
@@ -199,7 +200,7 @@ export const PostModal = () => {
             >
               <div className="profile-img">
                 {post.profilePhoto ? (
-                  <img src={post.profilePhoto} alt="" />
+                  <img src={`${baseUrl}/${post.profilePhoto}`} alt="" />
                 ) : (
                   <p>{post.name.slice(0, 1)}</p>
                 )}
@@ -274,7 +275,7 @@ export const PostModal = () => {
 
           {post.image && (
             <div className="image-box" onClick={handleOpenModal2}>
-              <img src={post.image} alt="new alts" />
+              <img src={`${baseUrl}/${post.image}`} alt="new alts" />
             </div>
           )}
 
@@ -328,7 +329,10 @@ export const PostModal = () => {
                           }
                         >
                           {comm.profilePhoto ? (
-                            <img src={comm.profilePhoto} alt="" />
+                            <img
+                              src={`${baseUrl}/${comm.profilePhoto}`}
+                              alt=""
+                            />
                           ) : (
                             <p>{comm.name.slice(0, 1)}</p>
                           )}
@@ -402,8 +406,7 @@ export const AddProfilePictureModal = (props: Props) => {
 
       return;
     }
-
-    dispatch(updateProfilePhoto([user.id, profileInfo]));
+    dispatch(updateProfilePhoto([user.id, selectedFile]));
     dispatch(closeModal4());
     setSelectedFile(null);
   };
@@ -459,7 +462,7 @@ export const AddProfilePictureModal = (props: Props) => {
           <div className="profile" onClick={() => navigate(`/profile`)}>
             <div className="profile-img">
               {user?.profilePhoto ? (
-                <img src={user?.profilePhoto} alt="" />
+                <img src={`${baseUrl}/${user.profilePhoto}`} alt="" />
               ) : (
                 <p>{user?.name.slice(0, 1)}</p>
               )}
@@ -558,7 +561,7 @@ export const AddBioModal = (props: Props) => {
           <div className="profile" onClick={() => navigate(`/profile`)}>
             <div className="profile-img">
               {user?.profilePhoto ? (
-                <img src={user?.profilePhoto} alt="" />
+                <img src={`${baseUrl}/${user.profilePhoto}`} alt="" />
               ) : (
                 <p>{user?.name.slice(0, 1)}</p>
               )}

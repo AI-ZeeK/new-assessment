@@ -1,7 +1,7 @@
 import axios from "axios";
+import {baseUrl} from "../../constants/constants";
 const API = axios.create({
-  baseURL: `https://newassessment.onrender.com`,
-  //   baseURL: `http://localhost:5000`,
+  baseURL: baseUrl,
 });
 const API_URL = "/api/friends";
 // friends/:friendId/:userId

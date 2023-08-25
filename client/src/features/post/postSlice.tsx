@@ -199,19 +199,14 @@ export const TwitSlice = createSlice({
       });
     builder
       .addCase(getTwits.pending, (state) => {
-        console.log("pending");
-
         state.appState.isLoading = true;
       })
       .addCase(getTwits.fulfilled, (state, {payload}) => {
-        console.log("fulfilled", payload);
         state.appState.isLoading = false;
         state.appState.isSuccess = true;
         state.posts = payload;
       })
       .addCase(getTwits.rejected, (state, {payload}) => {
-        console.log("rehected", payload);
-
         state.appState.isLoading = false;
         state.appState.isError = true;
         state.messages = payload;

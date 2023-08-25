@@ -12,6 +12,8 @@ import friendsRoutes from "./routes/friends.js";
 import UserRoutes from "./routes/user.js";
 export const prisma = new PrismaClient();
 export const redisClient = redis.createClient();
+export let gfs;
+// connectDB();
 //  Configurations
 const color = colors;
 dotenv.config();
@@ -21,6 +23,7 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => {
     res.send("Deployed successfully");
 });

@@ -6,6 +6,8 @@ import {ReqRes} from "../interface.js";
 export const login: ReqRes = async (req, res) => {
   try {
     const {email, password} = req.body;
+    if (!email || !password)
+      return res.status(400).json({message: "Input invalid"});
     const user: any = await prisma.user.findUnique({where: {email}});
     if (!user) {
       const salt = await bcrypt.genSalt();

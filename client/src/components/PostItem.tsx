@@ -32,6 +32,7 @@ import {
   getSentFriendRequests,
   sendFriendRequest,
 } from "../features/user/userSlice";
+import {baseUrl} from "../constants/constants";
 // const postMadeAt = moments();
 
 const PostItem = ({post, comments, isLoading}: any) => {
@@ -115,6 +116,7 @@ const PostItem = ({post, comments, isLoading}: any) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  console.log(baseUrl);
   return (
     <>
       <div className="goal">
@@ -129,7 +131,7 @@ const PostItem = ({post, comments, isLoading}: any) => {
           >
             <div className="profile-img">
               {post.profilePhoto ? (
-                <img src={post.profilePhoto} alt="" />
+                <img src={`${baseUrl}/${post.profilePhoto}`} alt="" />
               ) : (
                 <p>{post.name.slice(0, 1)}</p>
               )}
@@ -212,7 +214,7 @@ const PostItem = ({post, comments, isLoading}: any) => {
 
         {post.image && (
           <div className="image-box" onClick={handleOpenModal2}>
-            <img src={post.image} alt="new alts" />
+            <img src={`${baseUrl}/${post.image}`} alt="new alts" />
           </div>
         )}
         <div className="goal-date">
@@ -267,7 +269,7 @@ const PostItem = ({post, comments, isLoading}: any) => {
                         }
                       >
                         {comm.profilePhoto ? (
-                          <img src={comm.profilePhoto} alt="" />
+                          <img src={`${baseUrl}/${comm.profilePhoto}`} alt="" />
                         ) : (
                           <p>{comm.name.slice(0, 1)}</p>
                         )}

@@ -7,6 +7,7 @@ import {closeDeleteModal, closeModal} from "../features/app/AppSlice";
 import {useNavigate, useParams} from "react-router-dom";
 import {createDjeng, deleteTwit, getMyDjengs} from "../features/post/postSlice";
 import Spinner from "./Spinner";
+import {baseUrl} from "../constants/constants";
 
 type Props = {};
 
@@ -32,7 +33,7 @@ const Modal = (props: Props) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     if (addImage) {
-      await dispatch(createDjeng([profileInfo, postData.content, user.id]));
+      await dispatch(createDjeng([selectedFile, postData.content, user.id]));
 
       dispatch(closeModal());
       setPostData({content: ""});
@@ -51,7 +52,6 @@ const Modal = (props: Props) => {
   };
 
   const handleClickOutside = (event: any) => {
-    // console.log(12);
     if (
       modalRef.current &&
       modalOverlayRef.current &&
@@ -117,7 +117,7 @@ const Modal = (props: Props) => {
           >
             <div className="profile-img">
               {user?.profilePhoto ? (
-                <img src={user?.profilePhoto} alt="" />
+                <img src={`${baseUrl}/${user?.profilePhoto}`} alt="" />
               ) : (
                 <p>{user?.name.slice(0, 1)}</p>
               )}

@@ -308,10 +308,10 @@ export const sentFriendRequests = async (req, res) => {
             return res.status(201).json(isMyFriendRequests);
         }
         const authors = await prisma.user.findMany();
-        const myRequests = isMyFriendRequests.map((requests) => {
+        const myRequests = await Promise.all(isMyFriendRequests.map((requests) => {
             const { name, profilePhoto } = authors.find((author) => author.id === requests.friendId);
             return Object.assign(Object.assign({}, requests), { name, profilePhoto });
-        });
+        }));
         res.status(201).json(myRequests);
     }
     catch (error) {
@@ -360,8 +360,13 @@ export const FriendsPosts = async (req, res) => {
 };
 export const UserFriends = async (req, res) => {
     try {
+        console.log(1);
         const users = await prisma.user.findMany();
-        res.status(201).json(users);
+        console.log(2);
+        const newUsers = users.map((user) => {
+            return Object.assign(Object.assign({}, user), { profilePhoto: null });
+        });
+        res.status(201).json(newUsers);
     }
     catch (error) {
         res.status(409).json({ message: error.message });

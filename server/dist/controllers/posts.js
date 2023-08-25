@@ -1,7 +1,9 @@
 import { prisma } from "../app.js";
 export const createPost = async (req, res) => {
+    var _a;
     try {
         const { image, content, authorId } = req.body;
+        const fileUrl = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
         const author = await prisma.user.findUnique({
             where: {
                 id: authorId,
@@ -11,7 +13,7 @@ export const createPost = async (req, res) => {
             return res.status(404).json("error");
         if (image !== null) {
             await postService({
-                image,
+                image: fileUrl,
                 content,
                 authorId,
             });

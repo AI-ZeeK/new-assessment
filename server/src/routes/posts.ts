@@ -1,4 +1,5 @@
 import express from "express";
+const router = express.Router();
 import {
   createPost,
   getUserPosts,
@@ -9,14 +10,13 @@ import {
 } from "../controllers/posts.js";
 
 import {verifyToken} from "../middleware/auth.js";
-
-const router = express.Router();
+import {upload} from "../middleware/multer.js";
 
 // READ
 router.get("/post", getPosts);
 router.get("/post/users/:authorId", getUserPosts);
 router.get("/post/user/:id", getPost);
-router.post("/post", verifyToken, createPost);
+router.post("/post", upload.single("image"), createPost);
 router.delete("/post/:id", verifyToken, deletePost);
 router.put("/post/:postId/:userId", verifyToken, Like);
 

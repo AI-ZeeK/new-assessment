@@ -394,9 +394,13 @@ export const FriendsPosts: ReqRes = async (req, res) => {
 
 export const UserFriends: ReqRes = async (req, res) => {
   try {
+    console.log(1);
     const users = await prisma.user.findMany();
-
-    res.status(201).json(users);
+    console.log(2);
+    const newUsers = users.map((user) => {
+      return {...user, profilePhoto: null};
+    });
+    res.status(201).json(newUsers);
   } catch (error: any) {
     res.status(409).json({message: error.message});
   }
