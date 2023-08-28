@@ -138,7 +138,7 @@ export const getUser: any = createAsyncThunk(
   "User/get",
   async (id: any, thunkAPI) => {
     try {
-      return await authService.getUser(id);
+      return await authService.getUser();
     } catch (error: any) {
       const message =
         (error.response &&
@@ -155,7 +155,7 @@ export const getMyUser: any = createAsyncThunk(
   "MyUser/get",
   async (id: any, thunkAPI) => {
     try {
-      return await authService.getUser(id);
+      return await authService.getMyUser(id);
     } catch (error: any) {
       const message =
         (error.response &&

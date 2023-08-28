@@ -27,7 +27,9 @@ const Login = () => {
     }
     if (isSuccess) {
       navigate("/");
-      dispatch(reset());
+      setTimeout(() => {
+        dispatch(reset());
+      }, 100);
     }
   }, [isError, isSuccess]);
 

@@ -54,15 +54,27 @@ export const updateProfilePhotoApi = async (id: string, profilePhoto: any) => {
 
   return data;
 };
-const getUser = async (id: string) => {
+const getUser = async () => {
+  const userData =
+    localStorage.getItem("access-user") !== null
+      ? JSON.parse(localStorage.getItem("access-user") as string)
+      : null;
+  if (userData) {
+    const {data} = await API.get(`${USER_API_URL}/my/${userData.id}`);
+
+    if (data) {
+      localStorage.setItem(
+        "access-user",
+        JSON.stringify({...data, profilePhoto: null})
+      );
+    }
+    return data;
+  }
+  return;
+};
+const getMyUser = async (id: string) => {
   const {data} = await API.get(`${USER_API_URL}/my/${id}`);
 
-  if (data) {
-    localStorage.setItem(
-      "access-user",
-      JSON.stringify({...data, profilePhoto: null})
-    );
-  }
   return data;
 };
 const updateBio = async (id: string, bio: string) => {
@@ -80,6 +92,7 @@ const authService = {
   logout,
   login,
   getUser,
+  getMyUser,
   updateBio,
 };
 

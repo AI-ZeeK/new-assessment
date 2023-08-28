@@ -40,7 +40,7 @@ function App() {
     if (user && location.pathname === "/auth") {
       navigate("/");
     }
-    if (userData && usertoken && location.pathname === "/auth") {
+    if (usertoken && location.pathname === "/auth") {
       navigate("/");
     }
 
