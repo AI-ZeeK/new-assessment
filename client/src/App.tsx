@@ -37,10 +37,10 @@ function App() {
         ? JSON.parse(localStorage.getItem("access-token") as string)
         : null;
 
-    if (user && location.pathname === "/auth") {
-      navigate("/");
-    }
-    if (usertoken && location.pathname === "/auth") {
+    if (
+      (user && location.pathname === "/auth") ||
+      (usertoken && location.pathname === "/auth")
+    ) {
       navigate("/");
     }
 
