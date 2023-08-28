@@ -109,6 +109,7 @@ const Modal = (props: Props) => {
       ref={modalOverlayRef}
       className={`modal-overlay  ${isModalOpen ? "active" : ""}`}
     >
+      {isLoading && <Spinner />}
       <div ref={modalRef} className="modal">
         <div className="modal-head">
           <div
